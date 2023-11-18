@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+{%block nav%}{%endblock nav%}
+{% block css %}  <link rel="stylesheet" href="{%static 'css/proveedorAdd.css'%}"> {% endblock css %}
+
+{% block content %}
+<form method="POST" enctype="multipart/form-data" autocomplete="off">
+    {% csrf_token %}
+    <img src="/media/logo.svg" alt="logo" height="70">
+    <h1 class="text-center fst-italic">Creación de Proveedor</h1>
+
+    <div class="mb-3 col-12">
+        <label for="{{ form.name.id_for_label }}" class="form-label">Nombre del proveedor</label>
+        {{ form.name }}
+    </div>
+
+    <div class="mb-3 col-12">
+        <label for="{{ form.run.id_for_label }}" class="form-label">RUN</label>
+        {{ form.run }}
+    </div>
+
+    <div class="mb-3 col-12">
+        <label for="{{ form.cellphone.id_for_label }}" class="form-label">Número de teléfono</label>
+        {{ form.cellphone }}
+    </div>
+
+    <div class="mb-3 col-12">
+        <label for="{{ form.email.id_for_label }}" class="form-label">Correo electrónico</label>
+        {{ form.email }}
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a href="{% url 'home' %}" class="btn btn-3d btn-dark">Ir al inicio</a>
+        <button type="submit" class="btn btn-3d btn-primary">Guardar</button>
+    </div>
+</form>
+
+
+{% endblock content %}

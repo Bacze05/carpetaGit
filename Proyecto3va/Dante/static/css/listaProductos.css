@@ -1,0 +1,62 @@
+
+
+#nav {
+    background-color:rgb(142, 143, 250);
+}
+/* En tu archivo de estilos CSS (por ejemplo, styles.css) */
+.thead-red {
+    background-color: #ff0000; /* Puedes cambiar el código de color según tus preferencias */
+    color: white; /* Cambia el color del texto si es necesario para una mejor legibilidad */
+}
+
+.table td,
+.table th {
+    border: 1px solid #dee2e6; /* Añade un borde a las celdas */
+    padding: 8px; /* Ajusta el padding para darle más espacio */
+}
+
+.table th {
+    background-color: #f8f9fa; /* Cambia el color de fondo de las celdas de encabezado */
+}
+.table-hover tbody tr:hover {
+    background-color: #f2f3f4; /* Cambia el color de fondo al pasar el cursor sobre una fila */
+}
+.table {
+    border-collapse: separate; /* Asegura que los bordes sean independientes y visibles */
+    border-spacing: 0; /* Espaciado entre las celdas de la tabla */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Agrega una sombra a los bordes de la tabla */
+}
+.btn {
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+}
+
+.btn-dark {
+    background-color: #343a40;
+    border: none;
+    color: #fff;
+}
+
+.btn-3d {
+    transform: perspective(1px) translateZ(0);
+    transition-duration: 0.3s;
+    transition-property: transform;
+}
+
+.btn-3d:hover {
+    transform: scale(1.05);
+}
+
+    
+
+

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}  <link rel="stylesheet" href="{%static 'css/listaProductos.css'%}"> {% endblock css %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <div class="container text-center mt-5">
+        <h1 class="fst-italic text-decoration-underline">Productos de la categoría {{ categorias.name }}</h1>
+
+        <div class="row">
+            <div class="form-group col-md-8 mt-2 d-flex justify-content-center align-items-center">
+                <input type="text" id="buscador" class="form-control" placeholder="Buscar por nombre">
+            </div>
+
+            <div class="col-md-4 mt-2 d-flex justify-content-end">
+                <a href="{% url 'crearProducto' %}" class="btn btn-3d  btn-success"><i class="fas fa-plus"></i> Crear Producto</a>
+            </div>
+        </div>
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered table-hover table-striped">
+                <thead class="thead-red ">
+                    <tr >
+                        <th>Codigo</th>
+                        <th>Nombre</th>
+                        <th>Imagen</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in productos %}
+                    <tr>
+                        <td>{{ producto.bar_code }}</td>
+                        <td>{{ producto.name }}</td>
+
+                        <td>
+                            {% if producto.imagen %}
+                            <img src="{{producto.imagen.url}}" alt="" width="50" height="auto">
+                            {%endif%}
+                        </td>
+                        <td>${{ producto.price_sold }}</td>
+                        <td>
+                            <div class="form-group" >
+                                <a href="" class="btn btn-3d btn-warning">
+                                    Modificar <i class="fa-regular fa-pen-to-square"></i>
+                                </a>
+                                <form action="" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-3d btn-danger">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock content%}

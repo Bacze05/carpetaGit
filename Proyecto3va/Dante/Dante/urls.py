@@ -25,6 +25,10 @@ urlpatterns = [
     path('', inventario.home, name="home"),
     path('categorias/', inventario.categorias, name="categorias"),
     path('categorias/add/', inventario.crear_categoria, name="crearCategorias"),
+    path('categorias/list//<str:nombre>/', inventario.listaProductos, name="listaProductos"),
+    path('productos/Add/',inventario.crear_producto,name='crearProducto'),
+    path('proveedor/Add/',inventario.crear_proveedor,name='crearProveedor'),
+    
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
