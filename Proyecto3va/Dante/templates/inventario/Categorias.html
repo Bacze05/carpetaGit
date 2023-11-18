@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-6">
+    <div class="container text-center mt-5">
+        <h1 class="fst-italic text-decoration-underline">Categorias</h1>
+
+        <div class="row ">
+            <div class=" col-md-8 mt-2 d-flex justify-content-center align-items-center">
+                <input type="text" id="buscador" class="form-control" placeholder="Buscar por nombre">
+            </div>
+
+            <div class="col-md-4 mt-2 d-flex justify-content-end">
+                <a href="{% url 'crearCategorias' %}" class="btn btn-3d  btn-success"><i class="fas fa-plus"></i> Crear Categoria</a>
+            </div>
+        </div>
+
+        <div class="mb-5 mt-5 row col-12 justify-content-center">
+            {% for c in categorias %}
+                <div class="card mx-3 mb-3 shadow border" id="card-{{ forloop.counter }}" style="width: 15rem;">
+                    {% if c.foto %}
+                        <img src="{{ c.foto.url }}" class="card-img-top" alt="..." height="150px">
+                    {% endif %}
+                    <div class="card-body d-flex flex-column align-items-center">
+                        <h5 class="card-title text-center">{{ c.name }}</h5>
+                        <p class="card-text text-center">{{ c.descripcion }}</p>
+                        <a href="" class="btn btn-3d btn-primary"><i class="fa-solid fa-eye"></i> Ver Listado</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+{% endblock content %}

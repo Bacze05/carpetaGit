@@ -17,8 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from Inventario import views as inventario 
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', inventario.home, name="home")
+    path('', inventario.home, name="home"),
+    path('categorias/', inventario.categorias, name="categorias"),
+    path('categorias/add/', inventario.crear_categoria, name="crearCategorias"),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
