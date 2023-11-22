@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{%block nav%}{%endblock nav%}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/mantenedorProducto.css' %}">
+{% endblock css %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" class="my-4">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label for="{{ form.name.id_for_label }}" class="form-label">Nombre</label>
+        {{ form.name }}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.name_category.id_for_label }}" class="form-label">Descripcion</label>
+        {{ form.descripcion }}
+    </div>
+    <div class="mb-3">
+        <label for="{{ form.foto.id_for_label }}" class="form-label">Imagen</label>
+        {{ form.foto }}
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a href="{%url 'categorias'%}" class="btn btn-3d btn-dark">Ir al inicio</a>
+        
+        <button type="submit"  class="btn btn-3d btn-primary">Guardar</button>
+    </div>
+</form>
+
+{% endblock content %}

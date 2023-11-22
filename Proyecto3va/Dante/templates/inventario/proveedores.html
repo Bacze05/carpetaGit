@@ -15,42 +15,36 @@
             </div>
 
             <div class="col-md-4 mt-2 d-flex justify-content-end">
-                <a href="{% url 'crearProducto' %}" class="btn btn-3d  btn-success"><i class="fas fa-plus"></i> Crear Producto</a>
+                <a href="{% url 'crearProveedor' %}" class="btn btn-3d  btn-success"><i class="fas fa-plus"></i> Crear Proveedor</a>
             </div>
         </div>
         <div class="table-responsive mt-4">
             <table class="table table-bordered table-hover table-striped">
                 <thead class="thead-red ">
                     <tr >
-                        <th>Codigo</th>
+                        <th>Run</th>
                         <th>Nombre</th>
-                        <th>Imagen</th>
-                        <th>Precio</th>
+                        <th>Email</th>
+                        <th>Celular</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for producto in productos %}
+                    {% for c in proveedores %}
                     <tr>
-                        <td>{{ producto.bar_code }}</td>
-                        <td>{{ producto.name }}</td>
-
-                        <td>
-                            {% if producto.imagen %}
-                            <img src="{{producto.imagen.url}}" alt="" width="50" height="auto">
-                            {%endif%}
-                        </td>
-                        <td>${{ producto.price_sold }}</td>
+                        <td>{{ c.run }}</td>
+                        <td>{{ c.name }}</td>
+                        <td>{{ c.email }}</td>
+                        <td>{{ c.cellphone }}</td>
                         <td>
                             <div class="form-group" >
-                                <a href="{% url 'editarProducto' producto.id %}" class="btn btn-3d btn-warning">
+                                <a href="{%url 'editarProveedor' c.id %}" class="btn btn-3d btn-warning">
                                     Modificar <i class="fa-regular fa-pen-to-square"></i>
                                 </a>
-                            
-                                <button type="submit" onclick="eliminarProducto({{producto.id}})" class="btn btn-3d btn-danger formulario-eliminar" >
-                                    <i class="fa-regular fa-trash-can">Eliminar</i>
-                                </button>
                                 
+                                <button type="button" class="btn btn-3d btn-danger" onclick="eliminarProveedor({{c.id}})">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
                                 
                             </div>
                         </td>
@@ -63,7 +57,7 @@
 
 </div>
 <script>
-    function eliminarProducto(id){
+    function eliminarProveedor(id){
         console.log(id)
         
         Swal.fire({
@@ -76,14 +70,11 @@
         confirmButtonText: "Estoy seguro"
         }).then(function(result) {
         if (result.isConfirmed) {
-            window.location.href = "/productos/eliminado/"+id+"/"
+            window.location.href = "/proveedor/eliminado/"+id+"/"
        
         }
         });
     };
     
 </script>
-
-
-
 {% endblock content%}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+{%block nav%}{%endblock nav%}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/mantenedorProducto.css' %}">
+{% endblock css %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data" class="my-4">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="{{ form.name.id_for_label }}" class="form-label">Nombre</label>
+            {{ form.name }}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.name_category.id_for_label }}" class="form-label">Categoría</label>
+            {{ form.name_category }}
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label for="{{ form.price_sold.id_for_label }}" class="form-label">Precio de Venta</label>
+                {{ form.price_sold }}
+            </div>
+
+            <div class="col-md-6">
+                <label for="{{ form.buy_price.id_for_label }}" class="form-label">Precio de Compra</label>
+                {{ form.buy_price }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label for="{{ form.stock.id_for_label }}" class="form-label">Stock</label>
+                {{ form.stock }}
+            </div>
+
+            <div class="col-md-6">
+                <label for="{{ form.bar_code.id_for_label }}" class="form-label">Código de Barras</label>
+                {{ form.bar_code }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label for="{{ form.minimum_amount.id_for_label }}" class="form-label">Cantidad Mínima</label>
+                {{ form.minimum_amount }}
+            </div>
+
+            <div class="col-md-6">
+                <label for="{{ form.suppliers.id_for_label }}" class="form-label">Proveedor</label>
+                {{ form.suppliers }}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.imagen.id_for_label }}" class="form-label">Imagen</label>
+            {{ form.imagen }}
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a href="{%url 'categorias'%}" class="btn btn-3d btn-dark">Ir al inicio</a>
+            <button type="submit" class="btn btn-3d btn-primary">Guardar</button>
+        </div>
+    </form>
+{% endblock content %}

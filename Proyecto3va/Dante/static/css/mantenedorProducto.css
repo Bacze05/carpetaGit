@@ -1,0 +1,73 @@
+
+body {
+    background: linear-gradient(180deg, rgb(25, 4, 130) 0%, rgb(119, 82, 254) 100%) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+form{
+    background-color: rgb(119, 82, 254);
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 50px;
+    width: 500px;
+    
+    text-align: left;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+}
+.form-group{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-gap: 40px;
+   
+}
+/* Estilos para los campos del formulario */
+.form-control {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 10px;
+}
+input{
+    padding:  20px 15px;
+    border: 0;
+    outline: none;
+}
+/* Estilos para los botones */
+.btn {
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+}
+
+.btn-dark {
+    background-color: #343a40;
+    border: none;
+    color: #fff;
+}
+
+.btn-3d {
+    transform: perspective(1px) translateZ(0);
+    transition-duration: 0.3s;
+    transition-property: transform;
+}
+
+.btn-3d:hover {
+    transform: scale(1.05);
+}
+
+    
