@@ -1,0 +1,50 @@
+/* estilo botones */
+/* .btn {
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  } */
+  
+  .btn-primary {
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+  }
+  
+  .btn-dark {
+    background-color: #343a40;
+    border: none;
+    color: #fff;
+  }
+  
+  .btn-3d {
+    transform: perspective(1px) translateZ(0);
+    transition-duration: 0.3s;
+    transition-property: transform;
+  }
+  
+  .btn-3d:hover {
+    transform: scale(1.05);
+  }
+
+
+
+/* Ajustes para la clase .form-group.row dentro de la tarjeta */
+.card .form-group.row {
+    margin-top: 10px; /* Espaciado superior para separar de otros elementos dentro de la tarjeta */
+    display: flex;
+    justify-content: center; /* Centrar los botones horizontalmente */
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan a la siguiente línea si no hay suficiente espacio */
+}
+
+.card .form-group.row .col {
+    flex: 0 0 calc(50% - 10px); /* Hace que cada columna ocupe el 50% del ancho disponible, con un pequeño espacio entre ellas */
+    margin: 5px; /* Espaciado entre las columnas */
+}
+.card:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s;
+  }

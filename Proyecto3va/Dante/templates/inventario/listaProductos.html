@@ -13,10 +13,11 @@
             <div class="form-group col-md-8 mt-2 d-flex justify-content-center align-items-center">
                 <input type="text" id="buscador" class="form-control" placeholder="Buscar por nombre">
             </div>
-
+            {% if perms.Inventario.add_product %}
             <div class="col-md-4 mt-2 d-flex justify-content-end">
                 <a href="{% url 'crearProducto' %}" class="btn btn-3d  btn-success"><i class="fas fa-plus"></i> Crear Producto</a>
             </div>
+            {%endif%}
         </div>
         <div class="table-responsive mt-4">
             <table class="table table-bordered table-hover table-striped">
@@ -43,14 +44,16 @@
                         <td>${{ producto.price_sold }}</td>
                         <td>
                             <div class="form-group" >
+                                {% if perms.Inventario.change_product %}
                                 <a href="{% url 'editarProducto' producto.id %}" class="btn btn-3d btn-warning">
                                     Modificar <i class="fa-regular fa-pen-to-square"></i>
                                 </a>
-                            
+                                {%endif%}
+                                {% if perms.Inventario.delete_product %}
                                 <button type="submit" onclick="eliminarProducto({{producto.id}})" class="btn btn-3d btn-danger formulario-eliminar" >
-                                    <i class="fa-regular fa-trash-can">Eliminar</i>
+                                    <i class="fa-regular fa-trash-can"></i>
                                 </button>
-                                
+                                {%endif%}
                                 
                             </div>
                         </td>

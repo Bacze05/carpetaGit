@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+{%block css%} <link rel="stylesheet" href="{%static 'css/categorias.css'%}"> {%endblock css%}
 {% block content %}
 <div class="container mt-6">
     <div class="container text-center mt-5">
@@ -10,10 +10,11 @@
             <div class=" col-md-8 mt-2 d-flex justify-content-center align-items-center">
                 <input type="text" id="buscador" class="form-control" placeholder="Buscar por nombre">
             </div>
-
+            {%if perms.Inventario.add_category%}
             <div class="col-md-4 mt-2 d-flex justify-content-end">
                 <a href="{% url 'crearCategorias' %}" class="btn btn-3d  btn-success"><i class="fas fa-plus"></i> Crear Categoria</a>
             </div>
+            {%endif%}
         </div>
 
         <div class="mb-5 mt-5 row col-12 justify-content-center">
@@ -22,21 +23,29 @@
                     {% if c.foto %}
                         <img src="{{ c.foto.url }}" class="card-img-top" alt="..." height="150px">
                     {% endif %}
-                    <div class="card-body d-flex flex-column align-items-center">
-                        <h5 class="card-title text-center">{{ c.name }}</h5>
-                        <p class="card-text text-center">{{ c.descripcion }}</p>
-                        <a href="{% url 'listaProductos' c.name %}" class="btn btn-3d btn-primary"><i class="fa-solid fa-eye"></i> Ver Listado</a><br>
-                        <div class="form-group">
-
-                            <a href="{% url 'editarCategoria' c.id %}" class="btn btn-3d btn-warning">Modificar</a>
-                            <button type="button" class="btn btn-3d btn-danger" onclick="eliminarCategoria({{c.id}})">
-                                <i class="fa-regular fa-trash-can"></i>
-                            </button>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ c.name }}</h5>
+                        <p class="card-text">{{ c.descripcion }}</p>
+                        <a href="{% url 'listaProductos' c.name %}" class="btn btn-3d btn-primary"><i class="fa-solid fa-eye"></i> Ver Listado</a>
+                        
+                        <div class="form-group mt-2 row">
+                            {% if perms.Inventario.change_category %}
+                                <a href="{% url 'editarCategoria' c.id %}" class="btn btn-3d btn-warning mr-2 col-6">Modificar</a>
+                            {% endif %}
+                            &nbsp;
+                            {% if perms.Inventario.delete_category %}
+                                <button type="button" class="btn btn-3d btn-danger col-5" onclick="eliminarCategoria({{c.id}})">
+                                    <i class="fa-regular fa-trash-can"></i> 
+                                </button>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
+        
+        
+        
         <script>
             function eliminarCategoria(id){
                 console.log(id)

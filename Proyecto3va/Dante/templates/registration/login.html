@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}  <link rel="stylesheet" href="{%static 'css/login.css'%}"> 
+{% endblock css %}
+{%block nav%}{%endblock nav%}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+
+            <form method="POST">
+                {% csrf_token %}
+                <img src="/media/logo.svg" class="effect-3d" alt="logo" height="70">
+                <h1 class="text-center fst-italic effect-3d">Inicio de Sesion</h1>
+                {{form | crispy}}
+                <div class="d-flex justify-content-end">
+                    <input type="reset" class="btn btn-secondary effect-3d btn-3d" value="Cancelar">&nbsp;
+                    <input type="submit" class="btn btn-primary effect-3d btn-3d" value="Ingresar">
+                </div>
+            </form>
+   
+{% endblock content %}

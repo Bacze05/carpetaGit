@@ -13,10 +13,11 @@
             <div class="form-group col-md-8 mt-2 d-flex justify-content-center align-items-center">
                 <input type="text" id="buscador" class="form-control" placeholder="Buscar por nombre">
             </div>
-
+            {% if perms.Inventario.add_suppliers %}
             <div class="col-md-4 mt-2 d-flex justify-content-end">
                 <a href="{% url 'crearProveedor' %}" class="btn btn-3d  btn-success"><i class="fas fa-plus"></i> Crear Proveedor</a>
             </div>
+            {%endif%}
         </div>
         <div class="table-responsive mt-4">
             <table class="table table-bordered table-hover table-striped">
@@ -38,14 +39,16 @@
                         <td>{{ c.cellphone }}</td>
                         <td>
                             <div class="form-group" >
+                                {% if perms.Inventario.change_suppliers %}
                                 <a href="{%url 'editarProveedor' c.id %}" class="btn btn-3d btn-warning">
                                     Modificar <i class="fa-regular fa-pen-to-square"></i>
                                 </a>
-                                
+                                {%endif%}
+                                {% if perms.Inventario.delete_suppliers %}
                                 <button type="button" class="btn btn-3d btn-danger" onclick="eliminarProveedor({{c.id}})">
                                     <i class="fa-regular fa-trash-can"></i>
                                 </button>
-                                
+                                {%endif%}
                             </div>
                         </td>
                     </tr>
