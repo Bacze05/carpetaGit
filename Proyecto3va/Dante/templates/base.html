@@ -9,11 +9,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     {%block css%} <link rel="stylesheet" href="{%static 'css/base.css'%}">{%endblock css%}
-    
 </head>
 <body>
     {%block nav%}
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg fondo">
       <div class="container-fluid">
         <img src="/media/logo.svg" height="65" alt="">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,16 +22,16 @@
           <div class="navbar-nav">
             <ul class="nav justify-content-start"> <!-- Elementos iniciales -->
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'home'%}">Home</a>
               </li>
               {%if perms.Inventario.view_category%}
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'categorias' %}">Categorías</a>
+                <a class="nav-link active" href="{% url 'categorias' %}">Categorías</a>
               </li>
               {%endif%}
               {% if perms.Inventario.view_suppliers %}
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'proveedores' %}">Proveedor</a>
+                <a class="nav-link active" href="{% url 'proveedores' %}">Proveedor</a>
               </li>
               {%endif%}
               <li class="nav-item">
@@ -56,6 +55,9 @@
             <li class="nav-item">
               <a href="{% url 'login' %}" class="nav-link text-warning">Iniciar Sesión</a>
             </li>
+            <li class="nav-item">
+              <a href="{% url 'register' %}" class="nav-link text-warning">Registrarse</a>
+            </li>
           {% endif %}
         </div>
       </div>
@@ -63,7 +65,11 @@
     
     
       {%endblock nav%}
-      {%block content%}{%endblock content%}
+      {%block content%}
+      
+    
+    
+      {%endblock content%}
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

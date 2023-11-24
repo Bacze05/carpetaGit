@@ -17,12 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from Inventario import views as inventario 
+from Venta import views as venta
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     #LOGIN
     path('accounts/', include('django.contrib.auth.urls')),
+    path('register/', venta.register, name="register"),
     #INVENTARIO
     #VISTAS GENERALES
     path('admin/', admin.site.urls),
