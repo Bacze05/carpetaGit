@@ -7,7 +7,7 @@
 <div class="container mt-5">
 
     <div class="container text-center mt-5">
-        <h1 class="fst-italic text-decoration-underline">Productos de la categoría {{ categorias.name }}</h1>
+        <h1 class="fst-italic text-decoration-underline">Proveedores</h1>
 
         <div class="row">
             <div class="form-group col-md-8 mt-2 d-flex justify-content-center align-items-center">
@@ -27,7 +27,9 @@
                         <th>Nombre</th>
                         <th>Email</th>
                         <th>Celular</th>
+                        {% if perms.Inventario.change_suppliers or perms.Inventario.delete_suppliers%}
                         <th>Acciones</th>
+                        {%endif%}
                     </tr>
                 </thead>
                 <tbody>
@@ -37,6 +39,7 @@
                         <td>{{ c.name }}</td>
                         <td>{{ c.email }}</td>
                         <td>{{ c.cellphone }}</td>
+                        {% if perms.Inventario.change_suppliers or perms.Inventario.delete_suppliers %}
                         <td>
                             <div class="form-group" >
                                 {% if perms.Inventario.change_suppliers %}
@@ -51,6 +54,7 @@
                                 {%endif%}
                             </div>
                         </td>
+                        {%endif%}
                     </tr>
                     {% endfor %}
                 </tbody>

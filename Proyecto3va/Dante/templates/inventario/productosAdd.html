@@ -12,56 +12,53 @@
 
     <div class="mb-3 col-12">
         <label for="{{ form.name.id_for_label }}" class="form-label">Nombre</label>
-        {{ form_producto.name }}
+        {{ form.name }}
     </div>
     
     <div class="mb-3 col-12">
         <label for="{{ form.name_category.id_for_label }}" class="form-label">Categoría</label>
-        {{ form_producto.name_category }}
-        <a href="" class="btn btn-3d btn-success">
-            Crear Nueva Categoría
-        </a>
+        {{ form.name_category }}
     </div>
 
     <div class="mb-3 row">
         <div class="col-md-6">
             <label for="{{ form.price_sold.id_for_label }}" class="form-label">Precio de Venta</label>
-            {{ form_producto.price_sold }}
+            {{ form.price_sold }}
         </div>
 
         <div class="col-md-6">
             <label for="{{ form.buy_price.id_for_label }}" class="form-label">Precio de Compra</label>
-            {{ form_producto.buy_price }}
+            {{ form.buy_price }}
         </div>
     </div>
 
     <div class="mb-3 row">
         <div class="col-md-6">
             <label for="{{ form.stock.id_for_label }}" class="form-label">Stock</label>
-            {{ form_producto.stock }}
+            {{ form.stock }}
         </div>
 
         <div class="col-md-6">
             <label for="{{ form.bar_code.id_for_label }}" class="form-label">Código de Barras</label>
-            {{ form_producto.bar_code }}
+            {{ form.bar_code }}
         </div>
     </div>
 
     <div class="mb-3 row">
         <div class="col-md-6">
             <label for="{{ form.minimum_amount.id_for_label }}" class="form-label">Cantidad Mínima</label>
-            {{ form_producto.minimum_amount }}
+            {{ form.minimum_amount }}
         </div>
 
         <div class="col-md-6">
             <label for="{{ form.suppliers.id_for_label }}" class="form-label">Proveedor</label>
-            {{ form_producto.suppliers }}
+            {{ form.suppliers }}
         </div>
     </div>
 
     <div class="mb-3 col-12">
         <label for="{{ form.imagen.id_for_label }}" class="form-label">Imagen</label>
-        {{ form_producto.imagen }}
+        {{ form.imagen }}
     </div>
 
     <div class="d-flex justify-content-between">
@@ -70,35 +67,7 @@
     </div>
 </form>
 
-<div class="modal fade" id="categoriaModal" tabindex="-1" role="dialog" aria-labelledby="categoriaModalLabel" aria-hidden="true">
-    <form method="POST" enctype="multipart/form-data" autocomplete="off" >
-        {% csrf_token %}
-        <img src="/media/logo.svg" class="effect-3d" alt="logo" height="70">
-        <h1 class="text-center fst-italic effect-3d">Creacion de Categoria</h1>
-        <div class="mb-3">
-            <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre</label>
-            {{ form_categoria.name }}
-            {% if form_categoria.name.errors %}
-    <small class="text-danger">{{ form_categoria.name.errors.0 }}</small>
-        
-    </div>
-    {% endif %}
-        </div>
-        <div class="mb-3">
-            <label for="{{ form.descripcion.id_for_label }}" class="form-label">Descripción</label>
-            {{ form_categoria.descripcion }}
-        </div>
-        <div class="mb-3">
-            <label for="{{ form.foto.id_for_label }}" class="form-label">Foto</label>
-            {{ form_categoria.foto }}
-        </div>
-        
-        <div class="mb-3">
-            <button type="submit" class="btn btn-3d btn-primary me-2">Guardar</button>
-            <a href="{% url 'crearProducto' %}" class="btn btn-3d btn-dark">Ir al inicio</a>
-        </div>
-    </form>
-</div>
+
 
 
 {%endblock content%}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}  <link rel="stylesheet" href="{%static 'css/listaProductos.css'%}"> 
+{% endblock css %}
+
+{% block content %}
+<form  method="POST">
+    {%csrf_token%}
+    <p>¿Desea eliminar {{object}} ?</p>
+    <button type="submit" class="btn btn-danger" >Confirmar</button>
+    <a href="{%url 'categorias'%}" class="btn btn-secondary">Cancelar</a>
+</form>
+{%endblock content%}

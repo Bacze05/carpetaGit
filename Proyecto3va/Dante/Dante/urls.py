@@ -16,36 +16,39 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from Inventario import views as inventario 
-from Venta import views as venta
 from django.conf import settings
 from django.conf.urls.static import static
+from Inventario import views as inventario 
+from Venta import views as venta
 
 urlpatterns = [
     #LOGIN
     path('accounts/', include('django.contrib.auth.urls')),
-    path('register/', venta.register, name="register"),
+    path('register/', venta.Register.as_view(), name="register"),
     #INVENTARIO
     #VISTAS GENERALES
     path('admin/', admin.site.urls),
-    path('', inventario.home, name="home"),
-    path('categorias/', inventario.categorias, name="categorias"),
-    path('proveedores/',inventario.listaProveedores, name='proveedores'),
-    path('categorias/list/<str:nombre>/', inventario.listaProductos, name="listaProductos"),
+    path('', inventario.Home.as_view(), name="home"),
+    path('categorias/', inventario.Categorias.as_view(), name="categorias"),
+    path('proveedores/',inventario.ListaProveedores.as_view(), name='proveedores'),
+    path('categorias/list/<str:nombre>/', inventario.ListaProductosView.as_view(), name="listaProductos"),
     #Creacion
-    path('categorias/add/', inventario.crear_categoria, name="crearCategorias"),
-    path('productos/Add/',inventario.crear_producto,name='crearProducto'),
-    path('proveedor/Add/',inventario.crear_proveedor,name='crearProveedor'),
+    path('categorias/add/', inventario.CategoriaCrear.as_view(), name="crearCategorias"),
+    path('productos/Add/',inventario.ProductoCrear.as_view(),name='crearProducto'),
+    path('proveedor/Add/',inventario.ProveedorCrear.as_view(),name='crearProveedor'),
     #Modificar
-    path('productos/edit/<int:producto_id>',inventario.editar_producto,name='editarProducto'),
-    path('categorias/edit/<int:categoria_id>',inventario.editar_categoria,name='editarCategoria'),
-    path('proveedor/edit/<int:proveedor_id>',inventario.editar_proveedor,name='editarProveedor'),
+    path('productos/edit/<int:pk>',inventario.ProductoEdicion.as_view(),name='editarProducto'),
+    path('categorias/edit/<int:pk>',inventario.CategoriaEdicion.as_view(),name='editarCategoria'),
+    path('proveedor/edit/<int:pk>',inventario.ProveedorEdicion.as_view(),name='editarProveedor'),
     #Eliminar
-    path('productos/eliminado/<int:id>/',inventario.eliminar_producto,name='eliminarProducto'),
-    path('categorias/eliminado/<int:id>/',inventario.eliminar_categoria,name='eliminarCategoria'),
-    path('proveedor/eliminado/<int:id>/',inventario.eliminar_proveedor,name='elimminarProveedor'),
+    path('productos/eliminado/<int:pk>/',inventario.ProductoEliminar.as_view(),name='eliminarProducto'),
+    path('categorias/eliminado/<int:pk>/',inventario.CategoriaEliminar.as_view(),name='eliminarCategoria'),
+    path('proveedor/eliminado/<int:pk>/',inventario.ProveedorEliminar.as_view(),name='elimminarProveedor'),
 
     #VENTA
+    
+    path('panelVenta/',venta.Venta.as_view(),name='panelVenta'),
+    
     
 ]
 if settings.DEBUG:

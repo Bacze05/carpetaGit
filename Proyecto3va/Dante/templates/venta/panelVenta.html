@@ -1,0 +1,62 @@
+{%extends 'base.html'%} {%block css%}{%endblock css%} 
+{%load static%}
+{%block content%}
+ <!-- Formulario de escaneo de codigo de barra -->
+ <div class="container">
+    <div class="row mt-3 ">
+        <div class="col-8">
+            <form method="get" action="" class="mb-3">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <!-- <label for="cod_barra" class="form-label">Código de Barras:</label> -->
+                        <input type="text" name="cod_barra" id="cod_barra" class="form-control"
+                            placeholder="Codigo de barras">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Agregar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> <!-- aca termina el formulario  -->
+
+<div class="container mt-1">
+    <div class="row">
+        <div class="col-8">
+            <span class="border-bottom d-block border-secondary">
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Stock</th>
+                                <th scope="col">Cod.Barra</th>
+                                <th scope="col">Accion</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-productos">
+                            <!-- Filas de productos se agregarán dinámicamente aquí -->
+                            {% for producto in productos %}
+                            <tr data-producto_id="{{ producto.id }}">
+                                <td>{{ producto.name }}</td>
+                                <td>{{ producto.name_category }}</td>
+                                <td>${{ producto.price_sold }}</td>
+                                <td>{{ producto.stock }}</td>
+                                <td>{{ producto.bar_code }}</td>
+                                <td><button class="btn btn-danger" >Eliminar</button>
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </span>
+        </div> <!-- aqui termina ese listado  -->
+        <script src="{%static 'js/panelVenta.js'%}"></script>
+{%endblock content%}

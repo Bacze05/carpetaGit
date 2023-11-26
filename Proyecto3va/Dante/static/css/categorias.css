@@ -7,7 +7,9 @@
     padding: 10px 20px;
     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
   } */
-  
+  .fondo {
+    background-color: rgb(119, 82, 254);
+  }
   .btn-primary {
     background-color: #007bff;
     border: none;

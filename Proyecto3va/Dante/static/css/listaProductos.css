@@ -1,8 +1,8 @@
 
 
-#nav {
-    background-color:rgb(142, 143, 250);
-}
+.fondo {
+    background-color: rgb(119, 82, 254);
+  }
 /* En tu archivo de estilos CSS (por ejemplo, styles.css) */
 .thead-red {
     background-color: #ff0000; /* Puedes cambiar el código de color según tus preferencias */

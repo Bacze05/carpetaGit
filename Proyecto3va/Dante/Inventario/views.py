@@ -1,163 +1,163 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.views.generic import TemplateView,ListView,FormView,UpdateView, CreateView,DeleteView
+from django.urls import reverse_lazy
 from Inventario.forms import *
 from Inventario.models import *
-from django.contrib import messages
-
 
 # Create your views here.
 #VISTAS GENERALES PAGINAS PRINCIPALES
-def home(request):
-    return render(request,"base.html")
+class Home(TemplateView):
+    template_name='base.html'
 
-def categorias(request):
-    categorias=Category.objects.all()
-    return render(request,'inventario/Categorias.html',{'categorias':categorias})
+class Categorias(ListView):
+    model=Category
+    template_name='inventario/Categorias.html'
+    context_object_name='categorias'
 
-def listaProductos(request, nombre):
-    categoria = Category.objects.get(name=nombre)
-    productos = Product.objects.filter(name_category=categoria)
-    return render(request, 'inventario/listaProductos.html', {'categorias': categoria, 'productos': productos})
+class ListaProveedores(ListView):
+    model=Suppliers
+    template_name='inventario/proveedores.html'
+    context_object_name='proveedores'
+    
+class ListaProductosView(ListView):
+    template_name = 'inventario/listaProductos.html'
+    context_object_name = 'productos'  # Nombre de la variable de contexto que contendrá la lista de productos
 
-def listaProveedores(request):
-    proveedores = Suppliers.objects.all()
-   
-    return render(request, 'inventario/proveedores.html',{'proveedores': proveedores})
+    def get_queryset(self):
+        # Obtener el parámetro de la URL (nombre de la categoría)
+        nombre_categoria = self.kwargs['nombre']
+        
+        # Obtener la categoría correspondiente
+        categoria = Category.objects.get(name=nombre_categoria)
 
+        # Filtrar productos por la categoría
+        return Product.objects.filter(name_category=categoria)
+
+    def get_context_data(self, **kwargs):
+        # Agregar la categoría al contexto
+        context = super().get_context_data(**kwargs)
+        nombre_categoria = self.kwargs['nombre']
+        context['categorias'] = Category.objects.get(name=nombre_categoria)
+        return context
 
 
 #METODOS CREATES
+class CategoriaCrear(CreateView):
+    model=Category
+    template_name='inventario/categoriasAdd.html'
+    form_class=CategoryForm
+    success_url=reverse_lazy('categorias')
 
-def crear_categoria(request):
-    if request.method=="POST":
-        form=CategoryForm(request.POST,request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request,"Creado Correctamente")
-            return redirect('categorias')
-    else:
-        form=CategoryForm()
-    return render(request,'inventario/CategoriasAdd.html',{'form':form})
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Creado Correctamente")
+        return response
 
-# def crear_producto(request):
-#     if request.method=="POST":
-#         form=ProductForm(request.POST,request.FILES)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('home')
-#     else:
-#         form=ProductForm()
-#     return render(request,'inventario/productosAdd.html',{'form':form})
-def crear_producto(request):
-    if request.method == "POST":
-        form_producto = ProductForm(request.POST, request.FILES)
-        if form_producto.is_valid():
-            producto = form_producto.save(commit=False)
-            
-            # Guarda el producto y obtén la categoría asociada
-            producto.save()
+class ProductoCrear(CreateView):
+    model = Product
+    template_name = 'inventario/productosAdd.html'
+    form_class = ProductForm
+    success_url = reverse_lazy('listaProductos', kwargs={'nombre': ''})  # Ajusta la URL según tu configuración de URL
 
-            # Asumo que el campo que almacena la categoría se llama 'name_category'
-            nombre_categoria = producto.name_category.name
-            
-            # Redirige a la página de la lista de productos de la categoría asociada
-            return redirect('listaProductos', nombre=nombre_categoria)
-    else:
-        form_producto = ProductForm()
+    def form_valid(self, form):
+        # Accede al valor del campo name_category directamente desde el formulario
+        name_category_value = form.cleaned_data.get('name_category')
+        
+        messages.success(self.request, "Producto Creado Correctamente")
+        self.success_url = reverse_lazy('listaProductos', kwargs={'nombre': name_category_value})
+        
+        return super().form_valid(form)
 
-    return render(request, 'inventario/productosAdd.html', {'form_producto': form_producto})
+    def form_invalid(self, form):
+        messages.error(self.request, "Error al modificar el producto")  # Mensaje de error en caso de formulario no válido
+        return super().form_invalid(form)
 
-def crear_proveedor(request):
-    if request.method=="POST":
-        form=SuppliersForm(request.POST,request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request,"Creado Correctamente")
-            return redirect('proveedores')
-    else:
-        form=SuppliersForm()
-    return render(request,'inventario/proveedorAdd.html',{'form':form})
 
+class ProveedorCrear(CreateView):
+    model=Suppliers
+    template_name='inventario/proveedorAdd.html'
+    form_class=SuppliersForm
+    success_url=reverse_lazy('proveedores')
+
+    def form_valid(self, form):
+        messages.success(self.request, "Proveedor Creado Correctamente")
+        return super().form_valid(form)
+    
 
 #METODOS EDITAR
 
-def editar_categoria(request,categoria_id):
-     categoria = get_object_or_404(Category, id=categoria_id)
-    
-     if request.method == "POST":
-        form = CategoryForm(request.POST, request.FILES, instance=categoria)
-        if form.is_valid():
-            form.save()
-            messages.success(request,"Modificado Correctamente")
-            return redirect('categorias')
-     else:
-        form = CategoryForm(instance=categoria)
-    
-     return render(request, 'inventario/mantenedorCategoria.html', {'form': form})
+class CategoriaEdicion(UpdateView):
+    model = Category
+    template_name = 'inventario/mantenedorCategoria.html'
+    form_class = CategoryForm
+    success_url = reverse_lazy('categorias')
 
-def editar_producto(request,producto_id):
-     producto = get_object_or_404(Product, id=producto_id)
+    def form_valid(self, form):
+        # Llamamos al método form_valid de la clase base
+        response = super().form_valid(form)
+        # Agregamos el mensaje de éxito
+        messages.success(self.request, "Modificado Correctamente")
+        # Retornamos la respuesta
+        return response
     
-     if request.method == "POST":
-        form = ProductForm(request.POST, request.FILES, instance=producto)
-        if form.is_valid():
-            form.save()
-            messages.success(request,"Modificado Correctamente")
+class ProductoEdicion(UpdateView):
+    model = Product
+    template_name = 'inventario/mantenedorProducto.html'
+    form_class = ProductForm
+    success_url = reverse_lazy('listaProductos', kwargs={'nombre': ''})  # Ajusta la URL según tu configuración de URL
 
-            return redirect('listaProductos', nombre=producto.name_category.name)
-     else:
-        form = ProductForm(instance=producto)
-    
-     return render(request, 'inventario/mantenedorProducto.html', {'form': form})
+    def form_valid(self, form):
+        messages.success(self.request, "Modificado Correctamente")
+        self.success_url = reverse_lazy('listaProductos', kwargs={'nombre': self.object.name_category.name})
+        return super().form_valid(form)
 
-def editar_proveedor(request,proveedor_id):
-     proveedor = get_object_or_404(Suppliers, id=proveedor_id)
-    
-     if request.method == "POST":
-        form = SuppliersForm(request.POST, request.FILES, instance=proveedor)
-        if form.is_valid():
-            form.save()
-            messages.success(request,"Modificado Correctamente")
-            return redirect('proveedores')
-     else:
-        form = SuppliersForm(instance=proveedor)
-    
-     return render(request, 'inventario/mantenedorProveedor.html', {'form': form})
+    def form_invalid(self, form):
+        messages.error(self.request, "Error al modificar el producto")  # Mensaje de error en caso de formulario no válido
+        return super().form_invalid(form)
+
+class ProveedorEdicion(UpdateView):
+    model=Suppliers
+    template_name='inventario/mantenedorProveedor.html'
+    form_class=SuppliersForm
+    success_url= reverse_lazy('proveedores')
+
+    def form_valid(self, form):
+        messages.success(self.request, "Proveedor Modificado Correctamente")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Error al modificar al Proveedor")  # Mensaje de error en caso de formulario no válido
+        return super().form_invalid(form)
+
 
 
 #METODOS ELIMINAR
 
-def eliminar_producto(request, id):
-    producto = get_object_or_404(Product, id=id)
+class ProductoEliminar(DeleteView):
+    model=Product
+    success_url=reverse_lazy('listarProducto', kwargs={'nombre': ''})
 
-    # Obtener la imagen asociada al producto (si existe)
-    
-    producto.delete()
-    messages.success(request,"Eliminado correctamente")
-    # Obtener la URL referer (página anterior)
-    redirect_url = request.META.get('HTTP_REFERER', '/')
+    def form_valid(self,form):
+        messages.success(self.request, "Eliminado Correctamente")
+        self.success_url = reverse_lazy('listaProductos', kwargs={'nombre': self.object.name_category.name})
+        return super().form_valid(form)
 
-    return redirect(redirect_url)
 
-def eliminar_categoria(request, id):
-    categoria = get_object_or_404(Category, id=id)
 
-    # Obtener la imagen asociada al producto (si existe)
-    
-    categoria.delete()
-    messages.success(request,"Eliminado correctamente")
-    # Obtener la URL referer (página anterior)
-    
+class CategoriaEliminar(DeleteView):
+    model=Category
+    success_url=reverse_lazy('categorias')
 
-    return redirect('categorias')
+    def form_valid(self,form):
+        messages.success(self.request, "Eliminado Correctamente")
+        return super().form_valid(form)
 
-def eliminar_proveedor(request, id):
-    proveedor = get_object_or_404(Suppliers, id=id)
+class ProveedorEliminar(DeleteView):
+    model=Suppliers
+    success_url = reverse_lazy('proveedores')
 
-    # Obtener la imagen asociada al producto (si existe)
-    
-    proveedor.delete()
-    messages.success(request,"Eliminado correctamente")
-    # Obtener la URL referer (página anterior)
-    
+    def form_valid(self,form):
+        messages.success(self.request, "Eliminado Correctamente")
+        return super().form_valid(form)
 
-    return redirect('proveedores')

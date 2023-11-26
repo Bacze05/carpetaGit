@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import UserChangeForm
 from django.forms import SelectDateWidget
-from .models import User
+from .models import User,Profile
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
@@ -17,5 +17,7 @@ class CustomUserAdmin(BaseUserAdmin):
         ('Información adicional', {'fields': ('fecha_nacimiento', 'rut')}),
     )
 
+
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(Profile)
 

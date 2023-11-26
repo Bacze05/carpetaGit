@@ -27,7 +27,9 @@
                         <th>Nombre</th>
                         <th>Imagen</th>
                         <th>Precio</th>
+                        {% if perms.Inventario.change_product or perms.Inventario.delete_product%}
                         <th>Acciones</th>
+                        {%endif%}
                     </tr>
                 </thead>
                 <tbody>
@@ -42,6 +44,7 @@
                             {%endif%}
                         </td>
                         <td>${{ producto.price_sold }}</td>
+                        {% if perms.Inventario.change_product or perms.Inventario.delete_product%}
                         <td>
                             <div class="form-group" >
                                 {% if perms.Inventario.change_product %}
@@ -50,13 +53,17 @@
                                 </a>
                                 {%endif%}
                                 {% if perms.Inventario.delete_product %}
-                                <button type="submit" onclick="eliminarProducto({{producto.id}})" class="btn btn-3d btn-danger formulario-eliminar" >
+                                <!-- <button type="submit"  class="btn btn-3d btn-danger formulario-eliminar" >
                                     <i class="fa-regular fa-trash-can"></i>
-                                </button>
+                                </button> -->
+                                <a href="{% url 'eliminarProducto' producto.id %}" class="btn btn-3d btn-danger">
+                                    Eliminar <i class="fa-regular fa-pen-to-square"></i>
+                                </a>
                                 {%endif%}
                                 
                             </div>
                         </td>
+                        {%endif%}
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -65,7 +72,7 @@
     </div>
 
 </div>
-<script>
+<!-- <script>
     function eliminarProducto(id){
         console.log(id)
         
@@ -85,7 +92,7 @@
         });
     };
     
-</script>
+</script> -->
 
 
 

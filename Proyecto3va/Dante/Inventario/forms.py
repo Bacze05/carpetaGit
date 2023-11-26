@@ -1,7 +1,7 @@
 from django import forms
 from .models import Category, Suppliers, Product
 
-from django import forms
+
 
 
 class CategoryForm(forms.ModelForm):

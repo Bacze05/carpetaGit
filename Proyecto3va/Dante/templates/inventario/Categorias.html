@@ -34,9 +34,7 @@
                             {% endif %}
                             &nbsp;
                             {% if perms.Inventario.delete_category %}
-                                <button type="button" class="btn btn-3d btn-danger col-5" onclick="eliminarCategoria({{c.id}})">
-                                    <i class="fa-regular fa-trash-can"></i> 
-                                </button>
+                            <a href="{% url 'eliminarCategoria' c.id %}" class="btn btn-3d btn-danger mr-2 col-6"><i class="fa-regular fa-trash-can"></i> </a>
                             {% endif %}
                         </div>
                     </div>
@@ -46,7 +44,7 @@
         
         
         
-        <script>
+        <!-- <script>
             function eliminarCategoria(id){
                 console.log(id)
                 
@@ -66,5 +64,5 @@
                 });
             };
             
-        </script>
+        </script> -->
 {% endblock content %}
