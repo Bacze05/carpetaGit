@@ -1,31 +1,36 @@
 {% extends "base.html" %}
 {% load static %}
-{% block css %}  <link rel="stylesheet" href="{%static 'css/listaProductos.css'%}"> 
+{% block css %}
+  <!-- <link rel="stylesheet" href="{% static 'css/listaProductos.css' %}"> -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 {% endblock css %}
 
 {% block content %}
 <div class="container mt-5">
 
     <div class="container text-center mt-5">
-        <h1 class="fst-italic text-decoration-underline">Productos de la categoría {{ categorias.name }}</h1>
+        
 
         <div class="row">
-            <div class="form-group col-md-8 mt-2 d-flex justify-content-center align-items-center">
-                <input type="text" id="buscador" class="form-control" placeholder="Buscar por nombre">
+            <div class="col-md-8 mt-2 d-flex">
+
+                <h2 class="fst-italic ">Productos de la categoría </h2>
             </div>
             {% if perms.Inventario.add_product %}
             <div class="col-md-4 mt-2 d-flex justify-content-end">
-                <a href="{% url 'crearProducto' %}" class="btn btn-3d  btn-success"><i class="fas fa-plus"></i> Crear Producto</a>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#creacion"><i class="fas fa-plus"></i>
+                    Crear Producto
+                  </button>
             </div>
             {%endif%}
         </div>
         <div class="table-responsive mt-4">
-            <table class="table table-bordered table-hover table-striped">
+            <table id="tabla_productos" class="table table-bordered table-hover table-striped">
                 <thead class="thead-red ">
                     <tr >
                         <th>Codigo</th>
                         <th>Nombre</th>
-                        <th>Imagen</th>
+                        <th>Stock</th>
                         <th>Precio</th>
                         {% if perms.Inventario.change_product or perms.Inventario.delete_product%}
                         <th>Acciones</th>
@@ -33,67 +38,73 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for producto in productos %}
-                    <tr>
-                        <td>{{ producto.bar_code }}</td>
-                        <td>{{ producto.name }}</td>
-
-                        <td>
-                            {% if producto.imagen %}
-                            <img src="{{producto.imagen.url}}" alt="" width="50" height="auto">
-                            {%endif%}
-                        </td>
-                        <td>${{ producto.price_sold }}</td>
-                        {% if perms.Inventario.change_product or perms.Inventario.delete_product%}
-                        <td>
-                            <div class="form-group" >
-                                {% if perms.Inventario.change_product %}
-                                <a href="{% url 'editarProducto' producto.id %}" class="btn btn-3d btn-warning">
-                                    Modificar <i class="fa-regular fa-pen-to-square"></i>
-                                </a>
-                                {%endif%}
-                                {% if perms.Inventario.delete_product %}
-                                <!-- <button type="submit"  class="btn btn-3d btn-danger formulario-eliminar" >
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </button> -->
-                                <a href="{% url 'eliminarProducto' producto.id %}" class="btn btn-3d btn-danger">
-                                    Eliminar <i class="fa-regular fa-pen-to-square"></i>
-                                </a>
-                                {%endif%}
-                                
-                            </div>
-                        </td>
-                        {%endif%}
-                    </tr>
-                    {% endfor %}
+                    
                 </tbody>
             </table>
         </div>
     </div>
-
 </div>
-<!-- <script>
-    function eliminarProducto(id){
-        console.log(id)
-        
-        Swal.fire({
-        title: "Esta seguro que desea eliminarlo?",
-        text: "El cambio es irreversible",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Estoy seguro"
-        }).then(function(result) {
-        if (result.isConfirmed) {
-            window.location.href = "/productos/eliminado/"+id+"/"
-       
-        }
-        });
-    };
+<!-- Modal Creacion -->
+<div class="modal fade" id="creacion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="creacion">Creacion de Producto</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form method="POST" id="form_creacion" action="{% url 'crearProducto'  %}">
+            {% csrf_token %}
+            <div class="modal-body">
+                {{form.as_p}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" >Confirmar</button>
+            </div>
+        </form>
+        </div>
+      </div>
     
-</script> -->
+  </div>
+<div class="modal-fade" id="edicion" role="dialog">
+</div>
 
+<!-- Modal Edicion -->
+<div class="modal fade" id="edicion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="creacion">Creacion de Producto</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form method="POST" id="form_edicion" action="">
+            {% csrf_token %}
+            <div class="modal-body">
+                
+
+                {{form.as_p}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" >Confirmar</button>
+            </div>
+        </form>
+        </div>
+      </div>
+    
+  </div>
+<div class="modal-fade" id="edicion" role="dialog">
+</div>
 
 
 {% endblock content%}
+{% block extrajs %}
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="//cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="{% static 'js/productos/index.js' %}"></script>
+
+
+{% endblock extrajs %}

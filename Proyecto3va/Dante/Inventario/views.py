@@ -1,5 +1,7 @@
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.core.serializers import serialize
 from django.views.generic import TemplateView,ListView,FormView,UpdateView, CreateView,DeleteView
 from django.urls import reverse_lazy
 from Inventario.forms import *
@@ -19,9 +21,15 @@ class ListaProveedores(ListView):
     model=Suppliers
     template_name='inventario/proveedores.html'
     context_object_name='proveedores'
-    
-class ListaProductosView(ListView):
+
+class InicioListadoProducto(TemplateView): 
     template_name = 'inventario/listaProductos.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = ProductForm()  # Esto carga el formulario en el contexto
+        return context
+class ListaProductosView(ListView):
+    
     context_object_name = 'productos'  # Nombre de la variable de contexto que contendrá la lista de productos
 
     def get_queryset(self):
@@ -40,6 +48,18 @@ class ListaProductosView(ListView):
         nombre_categoria = self.kwargs['nombre']
         context['categorias'] = Category.objects.get(name=nombre_categoria)
         return context
+    
+    def get(self, request, **args):
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            data = serialize('json', self.get_queryset())
+            return HttpResponse(data, 'application/json')
+        else:
+            # Obtén el nombre de la categoría
+            nombre_categoria = self.kwargs['nombre']
+
+            # Redirige a 'inicioProductos' con el nombre de la categoría
+            return redirect('inicioProductos', nombre=nombre_categoria)
+
 
 
 #METODOS CREATES
@@ -59,7 +79,7 @@ class ProductoCrear(CreateView):
     template_name = 'inventario/productosAdd.html'
     form_class = ProductForm
     success_url = reverse_lazy('listaProductos', kwargs={'nombre': ''})  # Ajusta la URL según tu configuración de URL
-
+    
     def form_valid(self, form):
         # Accede al valor del campo name_category directamente desde el formulario
         name_category_value = form.cleaned_data.get('name_category')
@@ -108,8 +128,9 @@ class ProductoEdicion(UpdateView):
     success_url = reverse_lazy('listaProductos', kwargs={'nombre': ''})  # Ajusta la URL según tu configuración de URL
 
     def form_valid(self, form):
+        name_category_value = form.cleaned_data.get('name_category')
         messages.success(self.request, "Modificado Correctamente")
-        self.success_url = reverse_lazy('listaProductos', kwargs={'nombre': self.object.name_category.name})
+        self.success_url = reverse_lazy('listaProductos', kwargs={'nombre': name_category_value})
         return super().form_valid(form)
 
     def form_invalid(self, form):

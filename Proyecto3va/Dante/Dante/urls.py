@@ -25,6 +25,8 @@ urlpatterns = [
     #LOGIN
     path('accounts/', include('django.contrib.auth.urls')),
     path('register/', venta.Register.as_view(), name="register"),
+    path('inicio_productos/<str:nombre>/', inventario.InicioListadoProducto.as_view(), name="inicioProductos"),
+    path('panelVenta/', venta.PanelVenta.as_view(), name="panelVenta"),
     #INVENTARIO
     #VISTAS GENERALES
     path('admin/', admin.site.urls),
@@ -47,7 +49,8 @@ urlpatterns = [
 
     #VENTA
     
-    path('panelVenta/',venta.Venta.as_view(),name='panelVenta'),
+    
+    path('venta_List/', venta.ListaVentaView.as_view(), name="listaVenta"),
     
     
 ]

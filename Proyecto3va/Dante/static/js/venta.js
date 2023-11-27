@@ -1,117 +1,76 @@
-$(document).ready(function () {
-    $('form').on('submit', function (event) {
-        event.preventDefault();
-        var cod_barra = $('#cod_barra').val();
+var $ = jQuery.noConflict();
 
-        $.ajax({
-            type: 'GET',
-            url: '/venta/agregar_producto/',
-            data: { 'bar_code': cod_barra },
-            success: function (data) {
-                console.log(data);
-                // $('#tabla-productos').append(data);
-                // $('#cod_barra').val('');
+function listarVentaProductos() {
+    var bar_code = $('#bar_code').val();  // Obtener el valor de bar_code dentro de la función
+    
+    $.ajax({
+        url: '/venta_List/',
+        type: "get",
+        data: { 'bar_code': bar_code },  // Actualiza la clave a 'bar_code'
+        dataType: "json",
+        success: function(response){
+            $('#tabla_venta tbody').html("");
 
-                // // No es necesario recargar toda la página aquí
-                // // Actualizar la calculadora es suficiente
-                // actualizarCalculadora();
-            },
-            error: function (error) {
-                console.error('Error al agregar producto:', error.responseText);
+            function agregarFila(producto) {
+                var fila = `<tr >
+                                <td>${producto.name}</td>
+                                <td>${producto.name_category}</td>
+                                <td>$${producto.price_sold}</td>
+                                <td>${producto.stock}</td>
+                                <td>${producto.bar_code}</td>
+                                <td><button class="btn btn-danger">Eliminar</button></td>
+                            </tr>`;
+
+                // Agrega la fila a la tabla
+                $("#tabla_venta").append(fila);
             }
-        });
-    });
 
-    function restar_stock() {
-        var productosProductos = $('#tabla-productos tr');
+            $.each(response, function (index, producto) {
+                agregarFila(producto);
+            });
 
-        productosProductos.each(function () {
-            var productoCodBarra = $(this).find('td:eq(4)').text();
-            var productoStock = parseInt($(this).find('td:eq(3)').text());
-
-            // Reducir el stock solo si es mayor que cero
-            if (productoStock > 0) {
-                productoStock = productoStock - 1;
-                $(this).find('td:eq(3)').text(productoStock);
-
-                // Llamada AJAX para restar el stock en el servidor
-                $.get('/venta/reducir_stock/', { cod_barra: productoCodBarra }, function (data) {
-                    // Manejar la respuesta del servidor si es necesario
-                });
-            }
-        });
-    }
-
-    // Asignar función restar_stock al botón de confirmar
-    $(document).on('click', '.reducir-stock-btn', function () {
-        restar_stock();
-        console.log("Btn presionado");
-        // No es necesario recargar toda la página aquí
-        // Actualizar la calculadora es suficiente
-        actualizarCalculadora();
-    });
-
-    // Función para eliminar una fila
-    function eliminarFila(button) {
-        var fila = $(button).closest('tr');
-        fila.remove();
-        actualizarCalculadora();
-    }
-
-    // Asigna el evento onclick a los botones de eliminar
-    $(document).on('click', '.btn-danger', function () {
-        eliminarFila(this);
-    });
-
-    function actualizarCalculadora() {
-        var productosProductos = $('#tabla-productos tr');
-        var productosCalculadora = $('#tabla-calculadora');
-
-        productosCalculadora.empty(); // Limpiar la tabla de la calculadora
-        var productosContados = {}; // Objeto para llevar un registro de las cantidades
-
-        productosProductos.each(function () {
-            var productoNombre = $(this).find('td:eq(0)').text();
-            var productoPrecio = parseFloat($(this).find('td:eq(2)').text().replace('$', ''));
-            var productoStock = parseInt($(this).find('td:eq(3)').text());
-
-            var productoKey = productoNombre + '_' + productoPrecio;
-
-            if (productosContados[productoKey]) {
-                productosContados[productoKey].cantidad++;
-            } else {
-                productosContados[productoKey] = {
-                    cantidad: 1,
-                    nombre: productoNombre,
-                    precio: productoPrecio,
-                    stockOriginal: productoStock,
-                    stock: productoStock > 0 ? productoStock - 1 : 0,
-                };
-            }
-        });
-
-        var totalCalculadora = 0;
-
-        for (var productoId in productosContados) {
-            var producto = productosContados[productoId];
-            var productoPrecio = parseFloat(producto.precio);
-            var subtotal = producto.cantidad * productoPrecio;
-
-            var nuevaFila = `
-            <tr>
-            <td>${producto.nombre}</td>
-            <td>${producto.cantidad}</td>
-            <td>$${productoPrecio}</td>
-            <td class="stock-column">${producto.stock}</td>
-            <td><span id="subtotal-${productoId}">$${subtotal}</span></td>
-            </tr>`;
-
-            productosCalculadora.append(nuevaFila);
-            totalCalculadora += subtotal;
-
-            $('#subtotal-' + productoId).text('$' + subtotal);
+            // Inicializa el DataTable
+            $('#tabla_venta').DataTable({
+                language: {
+                    decimal: "",
+                    emptyTable: "No hay información",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    infoEmpty: "Mostrando 0 to 0 of 0 Entradas",
+                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrar _MENU_ Entradas",
+                    loadingRecords: "Cargando...",
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    zeroRecords: "Sin resultados encontrados",
+                    paginate: {
+                        first: "Primero",
+                        last: "Ultimo",
+                        next: "Siguiente",
+                        previous: "Anterior"
+                    }
+                },
+                pageLength: 6,
+            });
+        },
+        error: function (error) {
+            console.error("Error al obtener productos:", error.responseText);
         }
+    });
+}
 
-        $('#totalCalculadora').text('$' + totalCalculadora);
-    }
+$(document).ready(function () {
+    listarVentaProductos();
+    $('#btnBuscar').click(function () {
+        var bar_code = $('#bar_code').val();
+        
+        // Validar que bar_code no esté vacío y sea un número
+        if (bar_code !== '' && !isNaN(bar_code)) {
+            listarVentaProductos();
+        } else {
+            console.error("Error: El valor de bar_code no es válido");
+        }
+    });
+
 });

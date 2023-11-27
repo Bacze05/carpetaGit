@@ -4,11 +4,11 @@
 {% block content %}
 <div class="container mt-6">
     <div class="container text-center mt-5">
-        <h1 class="fst-italic text-decoration-underline">Categorias</h1>
+        
 
         <div class="row ">
             <div class=" col-md-8 mt-2 d-flex justify-content-center align-items-center">
-                <input type="text" id="buscador" class="form-control" placeholder="Buscar por nombre">
+                <h1 class="fst-italic text-decoration-underline">Categorias</h1>
             </div>
             {%if perms.Inventario.add_category%}
             <div class="col-md-4 mt-2 d-flex justify-content-end">
@@ -26,15 +26,15 @@
                     <div class="card-body text-center">
                         <h5 class="card-title">{{ c.name }}</h5>
                         <p class="card-text">{{ c.descripcion }}</p>
-                        <a href="{% url 'listaProductos' c.name %}" class="btn btn-3d btn-primary"><i class="fa-solid fa-eye"></i> Ver Listado</a>
+                        <a href="{% url 'inicioProductos' c.name %}" class="btn btn-3d btn-primary"><i class="fa-solid fa-eye"></i> Ver Listado</a>
                         
                         <div class="form-group mt-2 row">
                             {% if perms.Inventario.change_category %}
-                                <a href="{% url 'editarCategoria' c.id %}" class="btn btn-3d btn-warning mr-2 col-6">Modificar</a>
+                                <a href="{% url 'editarCategoria' c.id %}" class="btn btn-3d btn-warning mr-2 col-7">Modificar</a>
                             {% endif %}
-                            &nbsp;
+                           
                             {% if perms.Inventario.delete_category %}
-                            <a href="{% url 'eliminarCategoria' c.id %}" class="btn btn-3d btn-danger mr-2 col-6"><i class="fa-regular fa-trash-can"></i> </a>
+                                <a href="{% url 'eliminarCategoria' c.id %}" class="btn btn-3d btn-danger mr-2 col-4"><i class="fa-regular fa-trash-can"></i> </a>
                             {% endif %}
                         </div>
                     </div>

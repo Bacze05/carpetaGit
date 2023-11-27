@@ -33,69 +33,14 @@
   transform: scale(1.05);
 }
 
-form{
-  background-color: rgb(119, 82, 254);
-  background-position: center bottom;
-  background-repeat: no-repeat;
-  background-size: cover;
-  padding: 50px;
-  width: 500px;
-  
-  text-align: left;
-  box-shadow: 0 0 20px rgba(0,0,0,0.2);
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-}
-.form-group{
-  display: grid;
-  grid-template-columns: repeat(2,1fr);
-  grid-gap: 40px;
- 
-}
-/* Estilos para los campos del formulario */
-.form-control {
-  border: none;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  padding: 10px;
-}
-input{
-  padding:  20px 15px;
-  border: 0;
-  outline: none;
-}
-.card:hover {
-    transform: scale(1.05);
-    transition: transform 0.3s;
-  }
+
 .navbar-nav .nav-link:hover {
   color: #ffc107; /* Cambia el color en hover */
 }
 /* base.css */
 
-.pagination {
-  display: inline-block;
-  margin-bottom: 20px;
-}
-
-.pagination a {
+.nav-link{
   color: black;
-  float: left;
-  padding: 8px 16px;
-  text-decoration: none;
-  transition: background-color .3s;
-  border: 1px solid #ddd;
-}
-
-.pagination a.active {
-  background-color: #007bff;
-  color: white;
-  border: 1px solid #007bff;
-}
-
-.pagination a:hover:not(.active) {
-  background-color: #ddd;
 }
 
   

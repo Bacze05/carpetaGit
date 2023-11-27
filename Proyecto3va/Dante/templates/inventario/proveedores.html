@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% load static %}
-{% block css %}  <link rel="stylesheet" href="{%static 'css/listaProductos.css'%}"> 
+{% block css %}  
 {% endblock css %}
 
 {% block content %}
 <div class="container mt-5">
 
     <div class="container text-center mt-5">
-        <h1 class="fst-italic text-decoration-underline">Proveedores</h1>
 
         <div class="row">
             <div class="form-group col-md-8 mt-2 d-flex justify-content-center align-items-center">
-                <input type="text" id="buscador" class="form-control" placeholder="Buscar por nombre">
+                <h1 class="fst-italic ">Proveedores</h1>
+
             </div>
             {% if perms.Inventario.add_suppliers %}
             <div class="col-md-4 mt-2 d-flex justify-content-end">
