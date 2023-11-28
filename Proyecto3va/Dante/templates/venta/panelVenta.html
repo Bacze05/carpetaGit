@@ -1,43 +1,43 @@
-{%extends 'base.html'%} 
+{%extends 'base.html'%}
 {%block css%}
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-{%endblock css%} 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+{%endblock css%}
 {%load static%}
 
 {%block content%}
 
 <!-- <div class="container mt-5"> -->
 
-    <div class="container text-center mt-5">
-        
+<div class="container text-center mt-5">
 
-        <div class="row">
-            <div class="col-md-7 mt-2 d-flex">
 
-                <h2 class="fst-italic ">Listado de Venta </h2>
-                
-            </div>
-            <div class="col-5 mt-2 d-flex">
-                <form method="get" action="{% url 'listaVenta'%}" class="mb-3">
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col">
-                            <input type="text" name="bar_code" id="bar_code" class="form-control"
-                                placeholder="Codigo de barras">
-                        </div>
-                        <div class="col-auto">
-                            <button type="button" class="btn btn-primary" onclick="listarVentaProductos();">Agregar</button>
-                        </div>
+    <div class="row">
+        <div class="col-md-7 mt-2 d-flex">
+
+            <h2 class="fst-italic ">Listado de Venta </h2>
+
+        </div>
+        <div class="col-5 mt-2 d-flex">
+            <form method="get" action="{% url 'listaVenta'%}" class="mb-3">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <input type="text" name="bar_code" id="bar_code" class="form-control"
+                            placeholder="Codigo de barras">
+                         <div id="mensaje" style="display: none;"></div>
+
                     </div>
-                </form>
-            </div>
-        
+                    <button type="button" class="btn btn-primary" onclick="listarVentaProductos();">Agregar</button>
+                </div>
+            </form>
+        </div>
+
         <div class="table-responsive col-7 mt-4">
             <table id="tabla_venta" class="table table-bordered table-hover table-striped">
                 <thead>
-                    <tr >
-                        <th>Codigo</th>
+                    <tr>
                         <th>Nombre</th>
+                        <th>Codigo</th>
                         <th>Stock</th>
                         <th>Precio</th>
                         {% if perms.Inventario.change_product or perms.Inventario.delete_product%}
@@ -46,7 +46,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                 </tbody>
             </table>
         </div>
@@ -60,23 +60,23 @@
                                 <thead>
                                     <tr>
                                         <th>Producto</th>
-                                        <th>Cantidad</th>
                                         <th>Precio Unitario</th>
+                                        <th>Cantidad</th>
                                         <th>Subtotal</th>
                                     </tr>
                                 </thead>
-                                <tbody >
+                                <tbody>
                                 </tbody>
                             </table>
                         </div>
                         <div class="border p-2 mt-2">
                             <h4>Total: <span id="totalCalculadora">{{ total }}</span></h4>
                         </div>
-    
+
                     </div>
                 </div>
             </div><!-- termina calculadora -->
-    
+
             <!-- PIE DE LA CALCULADORA -->
             <div class="row mt-3">
                 <div class="col-6">
@@ -98,18 +98,18 @@
             <div class="text-center mt-3">
                 <a href="" class="btn btn-primary">Confirmar</a>
                 <a href="#" class="btn btn-danger">Cancelar</a>
-    
+
             </div>
         </div>
     </div>
-    </div>
 </div>
-    
-    
-    
-    
-    
-    <!-- MODAL PARA FACTURA
+</div>
+
+
+
+
+
+<!-- MODAL PARA FACTURA
     <div class="modal fade" id="modalDatosEmpresa" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="modalDatosEmpresaLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -137,11 +137,11 @@
         </div>
     </div>
     </div> -->
-    </div>
+</div>
 
 <!-- </div> aqui termina ese listado  -->
 
-       
+
 {%endblock content%}
 {% block extrajs %}
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

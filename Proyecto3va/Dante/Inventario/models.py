@@ -32,7 +32,7 @@ class Suppliers(models.Model):
 
 class Product(models.Model):
     name=models.CharField(max_length=100,verbose_name=("Name"))
-    name_category=models.ForeignKey("Inventario.Category", verbose_name=("Name Category"), on_delete=models.PROTECT)
+    name_category=models.ForeignKey("Inventario.Category", verbose_name=("Name Category"), on_delete=models.CASCADE)
     price_sold=models.PositiveIntegerField(verbose_name=("Price Sold"))
     buy_price=models.PositiveIntegerField(verbose_name=("Buy Price"))
     stock=models.PositiveIntegerField(verbose_name=("Stock"))
