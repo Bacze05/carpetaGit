@@ -15,11 +15,11 @@ function listarProductos() {
             $('#tabla_productos tbody').html("");
             for(let i = 0;i < response.length;i++){
                 let fila = '<tr>';
-                fila += '<td>' + response[i]["pk"]+'</td>';
+                fila += '<td>' + response[i]["fields"]['bar_code']+'</td>';
                 fila += '<td>' + response[i]["fields"]['name'] + '</td>';
                 fila += '<td>' + response[i]["fields"]['stock'] + '</td>';
                 fila += '<td>' + response[i]["fields"]['price_sold'] + '</td>';
-                fila += '<td><button type="button" class="btn btn-primary" >Editar </button> <button class= "btn btn-danger">Eliminar</button></td>';
+                fila += '<td><a href="/productos/edit/' + response[i]["pk"] + '" class="btn btn-primary"  >Editar </a> <a href="/productos/eliminado/' + response[i]["pk"] + '" class="btn btn-danger"  >Eliminar </a></td>';
                 fila += '</tr>';
                 $('#tabla_productos tbody').append(fila);
             }
@@ -44,8 +44,11 @@ function listarProductos() {
                       previous: "Anterior",
                     },
                   },
-                //   "searching": false,
+                  
                 pageLength: 6,
+                columnDefs: [
+                    { targets: [ 2, 3,4], searchable: false }  // Desactiva la búsqueda para las columnas 0, 2 y 3
+                ],
             });
         },
         error: function (error) {

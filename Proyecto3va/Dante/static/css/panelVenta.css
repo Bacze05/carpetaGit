@@ -1,0 +1,5 @@
+.table-responsive {
+    max-height: 400px; /* ajusta el valor según tus necesidades */
+    overflow-y: auto;
+}
+

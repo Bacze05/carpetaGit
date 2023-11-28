@@ -1,4 +1,5 @@
 
+// Inicializa DataTables para las dos tablas fuera de las funciones
 $(document).ready(function () {
     limpiarTabla('#tabla_venta tbody');
     limpiarTabla('#tabla_subtotal tbody');
@@ -9,6 +10,8 @@ $(document).ready(function () {
             listarVentaDetalle();
         }
     });
+
+ 
 });
 
 function limpiarTabla(tabla) {
@@ -67,6 +70,18 @@ function listarVentaDetalle() {
         }
     });
 }
+function actualizarTotal() {
+    var total = 0;
+
+    // Itera sobre las filas de la tabla de subtotales y suma los valores
+    $('#tabla_subtotal tbody tr').each(function() {
+        var subtotal = parseFloat($(this).find('td.subtotal').text().replace('$', '').trim());
+        total += isNaN(subtotal) ? 0 : subtotal;
+    });
+
+    // Actualiza el valor en el elemento totalCalculadora
+    $('#totalCalculadora').text(total.toFixed(0)); // Puedes ajustar el número de decimales según tu necesidad
+}
 
 function agregarFila(tabla, producto, esSubtotal) {
     var cantidad = 1; // Define la cantidad según tu lógica
@@ -81,6 +96,8 @@ function agregarFila(tabla, producto, esSubtotal) {
 
         subtotal = cantidad * producto.price_sold;
         filaExistente.find('td.subtotal').text(`$${subtotal}`);
+        actualizarTotal();
+
         return;
     }
 
@@ -104,6 +121,8 @@ function agregarFila(tabla, producto, esSubtotal) {
     fila += `</tr>`;
 
     $(tabla).append(fila);
+    actualizarTotal();
+
 }
 
 

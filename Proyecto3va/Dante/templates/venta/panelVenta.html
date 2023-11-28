@@ -1,6 +1,8 @@
 {%extends 'base.html'%}
+{% load static %}
 {%block css%}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{% static 'css/panelVenta.css'%}">
 {%endblock css%}
 {%load static%}
 
@@ -97,7 +99,7 @@
             </div>
             <div class="text-center mt-3">
                 <a href="" class="btn btn-primary">Confirmar</a>
-                <a href="#" class="btn btn-danger">Cancelar</a>
+                <a href="{% url 'panelVenta' %}" class="btn btn-danger">Cancelar</a>
 
             </div>
         </div>

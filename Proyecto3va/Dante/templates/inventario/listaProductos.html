@@ -64,45 +64,17 @@
         </form>
         </div>
       </div>
-    
   </div>
-<div class="modal-fade" id="edicion" role="dialog">
-</div>
 
-<!-- Modal Edicion -->
-<div class="modal fade" id="edicion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="creacion">Creacion de Producto</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <form method="POST" id="form_edicion" action="">
-            {% csrf_token %}
-            <div class="modal-body">
-                
 
-                {{form.as_p}}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" >Confirmar</button>
-            </div>
-        </form>
-        </div>
-      </div>
-    
-  </div>
-<div class="modal-fade" id="edicion" role="dialog">
-</div>
 
 
 {% endblock content%}
 {% block extrajs %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="//cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script src="{% static 'js/productos/index.js' %}"></script>
 
