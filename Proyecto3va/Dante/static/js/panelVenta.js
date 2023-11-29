@@ -82,7 +82,52 @@ function actualizarTotal() {
     // Actualiza el valor en el elemento totalCalculadora
     $('#totalCalculadora').text(total.toFixed(0)); // Puedes ajustar el número de decimales según tu necesidad
 }
+// Función para eliminar una fila
+function eliminarFila(button) {
+    var fila = $(button).closest('tr');
+    var esSubtotal = fila.closest('table').attr('id') === 'tabla_subtotal'; // Verifica si la fila pertenece a la tabla de subtotales
 
+    if (esSubtotal) {
+        restarCantidad(fila);
+    } else {
+        fila.remove();
+    }
+}
+
+// Función para restar 1 a la cantidad y actualizar la fila de subtotal
+function restarCantidad(fila) {
+    var cantidad = parseInt(fila.find('td.cantidad').text());
+
+    if (cantidad > 1) {
+        // Si la cantidad es mayor a 1, restar 1 y actualizar la fila
+        cantidad -= 1;
+        fila.find('td.cantidad').text(cantidad);
+        var producto = obtenerDatosProducto(fila);
+        var subtotal = cantidad * producto.price_sold;
+        fila.find('td.subtotal').text(`$${subtotal}`);
+    } else {
+        // Si la cantidad es 1 o menos, eliminar la fila
+        fila.remove();
+    }
+
+    actualizarTotal();
+}
+
+// Función para obtener los datos del producto desde la fila
+function obtenerDatosProducto(fila) {
+    return {
+        bar_code: fila.data('producto'),
+        name: fila.find('td:first-child').text(),
+        price_sold: parseFloat(fila.find('td:last-child').text().replace('$', '').trim())
+    };
+}
+
+
+
+// Asigna el evento onclick a los botones de eliminar
+$(document).on('click', '.btn-danger', function () {
+    eliminarFila(this);
+});
 function agregarFila(tabla, producto, esSubtotal) {
     var cantidad = 1; // Define la cantidad según tu lógica
     var subtotal = cantidad * producto.price_sold;
@@ -114,7 +159,8 @@ function agregarFila(tabla, producto, esSubtotal) {
     if (esSubtotal) {
         fila += `<td class="cantidad">${cantidad}</td>
                  <td class="subtotal">$${subtotal}</td>`;
-    } else {
+    } 
+    else {
         fila += `<td><button class="btn btn-danger">Eliminar</button></td>`;
     }
 
@@ -124,8 +170,6 @@ function agregarFila(tabla, producto, esSubtotal) {
     actualizarTotal();
 
 }
-
-
 
 
 
