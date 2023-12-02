@@ -7,12 +7,12 @@
         
 
         <div class="row ">
-            <div class=" col-md-8 mt-2 d-flex justify-content-center align-items-center">
-                <h1 class="fst-italic text-decoration-underline">Categorias</h1>
+            <div class=" form-group col-md-8 mt-2 d-flex justify-content-center align-items-center">
+                <h1 class="fst-italic ">Categorias</h1>
             </div>
             {%if perms.Inventario.add_category%}
             <div class="col-md-4 mt-2 d-flex justify-content-end">
-                <a href="{% url 'crearCategorias' %}" class="btn btn-3d  btn-success"><i class="fas fa-plus"></i> Crear Categoria</a>
+                <a href="{% url 'crearCategorias' %}" class="btn btn-3d  btn-primary"><i class="fas fa-plus"></i> Crear Categoria</a>
             </div>
             {%endif%}
         </div>

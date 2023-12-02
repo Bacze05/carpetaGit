@@ -72,3 +72,10 @@ class CustomUserCreationForm(UserCreationForm):
             )
         )
         self.fields['fecha_nacimiento'].label = 'Fecha de nacimiento'
+
+
+from django import forms
+
+class CantidadForm(forms.Form):
+    cantidad = forms.IntegerField(min_value=1)
+    producto_id = forms.IntegerField(widget=forms.HiddenInput())

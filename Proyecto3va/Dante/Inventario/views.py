@@ -1,34 +1,38 @@
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.serializers import serialize
-from django.views.generic import TemplateView,ListView,FormView,UpdateView, CreateView,DeleteView
+from django.views.generic import TemplateView,ListView,UpdateView, CreateView,DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .mixins import *
 from django.urls import reverse_lazy
 from Inventario.forms import *
 from Inventario.models import *
+
 
 # Create your views here.
 #VISTAS GENERALES PAGINAS PRINCIPALES
 class Home(TemplateView):
     template_name='base.html'
 
-class Categorias(ListView):
+class Categorias(LoginRequiredMixin,ListView):
     model=Category
     template_name='inventario/Categorias.html'
     context_object_name='categorias'
 
-class ListaProveedores(ListView):
+
+class ListaProveedores(LoginRequiredMixin,ListView):
     model=Suppliers
     template_name='inventario/proveedores.html'
     context_object_name='proveedores'
 
-class InicioListadoProducto(TemplateView): 
+class InicioListadoProducto(LoginRequiredMixin,TemplateView): 
     template_name = 'inventario/listaProductos.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = ProductForm()  # Esto carga el formulario en el contexto
         return context
-class ListaProductosView(ListView):
+class ListaProductosView(LoginRequiredMixin,ListView):
     
     context_object_name = 'productos'  # Nombre de la variable de contexto que contendrá la lista de productos
 
@@ -63,7 +67,7 @@ class ListaProductosView(ListView):
 
 
 #METODOS CREATES
-class CategoriaCrear(CreateView):
+class CategoriaCrear(LoginRequiredMixin,CreateView):
     model=Category
     template_name='inventario/categoriasAdd.html'
     form_class=CategoryForm
@@ -74,7 +78,7 @@ class CategoriaCrear(CreateView):
         messages.success(self.request, "Creado Correctamente")
         return response
 
-class ProductoCrear(CreateView):
+class ProductoCrear(LoginRequiredMixin,CreateView):
     model = Product
     template_name = 'inventario/productosAdd.html'
     form_class = ProductForm
@@ -94,7 +98,7 @@ class ProductoCrear(CreateView):
         return super().form_invalid(form)
 
 
-class ProveedorCrear(CreateView):
+class ProveedorCrear(LoginRequiredMixin,CreateView):
     model=Suppliers
     template_name='inventario/proveedorAdd.html'
     form_class=SuppliersForm
@@ -107,7 +111,7 @@ class ProveedorCrear(CreateView):
 
 #METODOS EDITAR
 
-class CategoriaEdicion(UpdateView):
+class CategoriaEdicion(LoginRequiredMixin,UpdateView):
     model = Category
     template_name = 'inventario/mantenedorCategoria.html'
     form_class = CategoryForm
@@ -121,7 +125,7 @@ class CategoriaEdicion(UpdateView):
         # Retornamos la respuesta
         return response
     
-class ProductoEdicion(UpdateView):
+class ProductoEdicion(LoginRequiredMixin,UpdateView):
     model = Product
     template_name = 'inventario/mantenedorProducto.html'
     form_class = ProductForm
@@ -137,7 +141,7 @@ class ProductoEdicion(UpdateView):
         messages.error(self.request, "Error al modificar el producto")  # Mensaje de error en caso de formulario no válido
         return super().form_invalid(form)
 
-class ProveedorEdicion(UpdateView):
+class ProveedorEdicion(LoginRequiredMixin,UpdateView):
     model=Suppliers
     template_name='inventario/mantenedorProveedor.html'
     form_class=SuppliersForm
@@ -155,7 +159,7 @@ class ProveedorEdicion(UpdateView):
 
 #METODOS ELIMINAR
 
-class ProductoEliminar(DeleteView):
+class ProductoEliminar(LoginRequiredMixin,DeleteView):
     model=Product
     success_url=reverse_lazy('listarProducto', kwargs={'nombre': ''})
 
@@ -166,7 +170,7 @@ class ProductoEliminar(DeleteView):
 
 
 
-class CategoriaEliminar(DeleteView):
+class CategoriaEliminar(LoginRequiredMixin,DeleteView):
     model=Category
     success_url=reverse_lazy('categorias')
 
@@ -174,7 +178,7 @@ class CategoriaEliminar(DeleteView):
         messages.success(self.request, "Eliminado Correctamente")
         return super().form_valid(form)
 
-class ProveedorEliminar(DeleteView):
+class ProveedorEliminar(LoginRequiredMixin,DeleteView):
     model=Suppliers
     success_url = reverse_lazy('proveedores')
 

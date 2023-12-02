@@ -26,7 +26,7 @@ function mostrarMensaje(mensaje) {
 function listarVentaProductos() {
     var bar_code = $('#bar_code').val();
     $.ajax({
-        url: '/venta_List/',
+        url: '/listaVenta/',
         type: "get",
         data: { 'bar_code': bar_code },
         dataType: "json",
@@ -39,6 +39,7 @@ function listarVentaProductos() {
             } else {
                 // Mostrar mensaje indicando que el código de barras no existe
                 mostrarMensaje("Código de barras no encontrado.");
+                $('#bar_code').val('');
             }
         },
         error: function (error) {
@@ -49,8 +50,9 @@ function listarVentaProductos() {
 
 function listarVentaDetalle() {
     var bar_code = $('#bar_code').val();
+
     $.ajax({
-        url: '/venta_List/',
+        url: '/listaVenta/',
         type: "get",
         data: { 'bar_code': bar_code },
         dataType: "json",
@@ -59,6 +61,7 @@ function listarVentaDetalle() {
                 response.forEach(function (producto) {
                     agregarFila('#tabla_subtotal tbody', producto, true);
                 });
+
                 $('#bar_code').val('');
             } else {
                 // Mostrar mensaje indicando que el código de barras no existe
@@ -70,6 +73,10 @@ function listarVentaDetalle() {
         }
     });
 }
+
+
+
+
 function actualizarTotal() {
     var total = 0;
 
@@ -82,36 +89,8 @@ function actualizarTotal() {
     // Actualiza el valor en el elemento totalCalculadora
     $('#totalCalculadora').text(total.toFixed(0)); // Puedes ajustar el número de decimales según tu necesidad
 }
-// Función para eliminar una fila
-function eliminarFila(button) {
-    var fila = $(button).closest('tr');
-    var esSubtotal = fila.closest('table').attr('id') === 'tabla_subtotal'; // Verifica si la fila pertenece a la tabla de subtotales
 
-    if (esSubtotal) {
-        restarCantidad(fila);
-    } else {
-        fila.remove();
-    }
-}
 
-// Función para restar 1 a la cantidad y actualizar la fila de subtotal
-function restarCantidad(fila) {
-    var cantidad = parseInt(fila.find('td.cantidad').text());
-
-    if (cantidad > 1) {
-        // Si la cantidad es mayor a 1, restar 1 y actualizar la fila
-        cantidad -= 1;
-        fila.find('td.cantidad').text(cantidad);
-        var producto = obtenerDatosProducto(fila);
-        var subtotal = cantidad * producto.price_sold;
-        fila.find('td.subtotal').text(`$${subtotal}`);
-    } else {
-        // Si la cantidad es 1 o menos, eliminar la fila
-        fila.remove();
-    }
-
-    actualizarTotal();
-}
 
 // Función para obtener los datos del producto desde la fila
 function obtenerDatosProducto(fila) {
@@ -123,11 +102,23 @@ function obtenerDatosProducto(fila) {
 }
 
 
+function recuperarDatosSubtotal() {
+    var datosSubtotal = [];
 
-// Asigna el evento onclick a los botones de eliminar
-$(document).on('click', '.btn-danger', function () {
-    eliminarFila(this);
-});
+    // Itera sobre las filas de la tabla de subtotales y recupera los datos
+    $('#tabla_subtotal tbody tr').each(function() {
+        var producto = obtenerDatosProducto($(this));
+        datosSubtotal.push({
+            bar_code: producto.bar_code,
+            name: producto.name,
+            price_sold: producto.price_sold,
+            cantidad: parseInt($(this).find('td.cantidad').text()),
+            subtotal: parseFloat($(this).find('td.subtotal').text().replace('$', '').trim())
+        });
+    });
+
+    return datosSubtotal;
+}
 function agregarFila(tabla, producto, esSubtotal) {
     var cantidad = 1; // Define la cantidad según tu lógica
     var subtotal = cantidad * producto.price_sold;
@@ -146,7 +137,7 @@ function agregarFila(tabla, producto, esSubtotal) {
         return;
     }
 
-    var fila = `<tr data-producto="${producto.bar_code}">
+    var fila = `<tr data-producto="${producto.id} <input type="hidden" value="${producto.id}" name="producto_id" />">
                     <td>${producto.name}</td>`;
 
     if (!esSubtotal) {
@@ -154,15 +145,17 @@ function agregarFila(tabla, producto, esSubtotal) {
                  <td>${producto.stock}</td>`;
     }
 
-    fila += `<td>$${producto.price_sold}</td>`;
+    fila += `<td >$${producto.price_sold}</td><input type="hidden" value="${producto.price_sold}" name="price_sold" />`;
 
     if (esSubtotal) {
-        fila += `<td class="cantidad">${cantidad}</td>
-                 <td class="subtotal">$${subtotal}</td>`;
-    } 
-    else {
-        fila += `<td><button class="btn btn-danger">Eliminar</button></td>`;
+        fila += `<td class="cantidad">${cantidad}</td> <input type="hidden" value="${cantidad}" name="cantidad" />
+        <td id="" class="subtotal">$${subtotal}</td> <input type="hidden" value="${subtotal}" name="subtotal" />
+        // Establece el valor del campo oculto producto_id
+        `;
     }
+    // else {
+    //     fila += `<td><button class="btn btn-danger">Eliminar</button></td>`;
+    // }
 
     fila += `</tr>`;
 

@@ -1,0 +1,26 @@
+<!-- escanear_producto.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Escanear Producto</title>
+</head>
+<body>
+    <h1>Escanear Producto</h1>
+    <form method="post" action="{% url 'escanear_producto' %}">
+        {% csrf_token %}
+        <label for="codigo_barras">Código de Barras:</label>
+        <input type="text" name="codigo_barras" id="codigo_barras" autofocus required>
+        <button type="submit">Escanear</button>
+    </form>
+
+    <h2>Productos Escaneados:</h2>
+    {% if venta_actual %}
+        <ul>
+            {% for detalle in venta_actual.detalles.all %}
+                <li>{{ detalle.producto.name }} - Subtotal: {{ detalle.calcular_subtotal }}</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'confirmar_venta' %}">Confirmar Venta</a>
+    {% endif %}
+</body>
+</html>

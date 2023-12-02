@@ -27,36 +27,31 @@ class Cajas(models.Model):
 
     def cerrar_caja(self):
         self.cerrada = True
-        self.fecha_cierre = timezone.now()  # Establecer la fecha de cierre en el momento real
+        self.fecha_cierre = timezone.now()
         self.save()
-
+    @property
+    def turno_abierto(self):
+        return not self.cerrada
 class Venta(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
     caja = models.ForeignKey(Cajas, on_delete=models.CASCADE, default=1)
-    total_venta = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-
-    def calcular_total_venta(self):
-        detalles_venta = DetalleVenta.objects.filter(venta=self)
-        total = sum([detalle.calcular_subtotal() for detalle in detalles_venta])
-        self.total_venta = total
-        self.save()
-
+    # total_venta = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
     def __str__(self):
         return f"Venta {self.id} - {self.fecha}"
 
 class DetalleVenta(models.Model):
-    venta = models.ForeignKey(Venta, on_delete=models.CASCADE)
-    producto = models.ForeignKey(Product, on_delete=models.CASCADE)
+    venta = models.ForeignKey(Venta, on_delete=models.CASCADE, related_name='detalles')
+    producto = models.ForeignKey(Product, related_name='detalles', on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField(default=1)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     descuento = models.ForeignKey(Descuento, on_delete=models.SET_NULL, null=True, blank=True)
 
+
     def calcular_subtotal(self):
-        if self.descuento:
-            subtotal = (self.cantidad * self.precio) - ((self.cantidad * self.precio * self.descuento.valor_descuento) / 100)
-        else:
-            subtotal = self.cantidad * self.precio
-        return subtotal
+        
+        return self.precio * self.cantidad
+
 
 class Reporte(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -89,8 +84,12 @@ class Profile(models.Model):
         return self.user.username
 
 def create_user_profile(sender,instance,created, **kwargs):
-    if created :
+    if created and not hasattr(instance, 'profile'):
         Profile.objects.create(user=instance)
+        # Verifica si ya hay una caja abierta
+        if not Cajas.objects.filter(vendedor=instance, cerrada=False).exists():
+            Cajas.objects.create(vendedor=instance)
+
     
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()

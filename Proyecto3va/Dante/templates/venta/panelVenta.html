@@ -24,12 +24,10 @@
                 {% csrf_token %}
                 <div class="row">
                     <div class="col">
-                        <input type="text" name="bar_code" id="bar_code" class="form-control"
-                            placeholder="Codigo de barras">
-                         <div id="mensaje" style="display: none;"></div>
+                        <input type="text" name="bar_code" id="bar_code" placeholder="Codigo de barras">
+                        <div id="mensaje" style="display: none; color: red;"></div>
 
                     </div>
-                    <button type="button" class="btn btn-primary" onclick="listarVentaProductos();">Agregar</button>
                 </div>
             </form>
         </div>
@@ -42,9 +40,7 @@
                         <th>Codigo</th>
                         <th>Stock</th>
                         <th>Precio</th>
-                        {% if perms.Inventario.change_product or perms.Inventario.delete_product%}
-                        <th>Acciones</th>
-                        {%endif%}
+
                     </tr>
                 </thead>
                 <tbody>
@@ -98,10 +94,22 @@
                 </div>
             </div>
             <div class="text-center mt-3">
-                <a href="" class="btn btn-primary">Confirmar</a>
-                <a href="{% url 'panelVenta' %}" class="btn btn-danger">Cancelar</a>
+                <form method="post" action="{% url 'panelVenta' %}">
+                    {% csrf_token %}
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary" name="confirmar">Confirmar</button>
+                    </div>
+                </form>
+                <a href="{% url 'home' %}" class="btn btn-danger">Cancelar</a>
+
+
+
+
+
+
 
             </div>
+
         </div>
     </div>
 </div>

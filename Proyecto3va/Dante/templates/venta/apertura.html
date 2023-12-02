@@ -1,0 +1,8 @@
+<!-- abrir_caja.html -->
+<!-- ... tu contenido HTML ... -->
+<form method="post" action="{% url 'apertura' %}">
+    {% csrf_token %}
+    <!-- ... tus campos de formulario ... -->
+    <button type="submit" class="btn btn-primary">Abrir Caja</button>
+</form>
+<!-- ... tu contenido HTML ... -->
