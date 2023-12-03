@@ -94,20 +94,13 @@
                 </div>
             </div>
             <div class="text-center mt-3">
-                <form method="post" action="{% url 'panelVenta' %}">
+                <form method="POST" action="">
                     {% csrf_token %}
                     <div class="text-center mt-3">
-                        <button type="submit" class="btn btn-primary" name="confirmar">Confirmar</button>
+                        <button type="submit" id="ConfirmarVenta " class="btn btn-primary" name="confirmar">Confirmar</button>
+                        <a href="{% url 'home' %}" class="btn btn-danger">Cancelar</a>
                     </div>
                 </form>
-                <a href="{% url 'home' %}" class="btn btn-danger">Cancelar</a>
-
-
-
-
-
-
-
             </div>
 
         </div>

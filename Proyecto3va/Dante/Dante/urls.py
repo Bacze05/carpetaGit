@@ -51,13 +51,12 @@ urlpatterns = [
     
     path('apertura/', venta.AbrirCajaView.as_view(), name="apertura"),
     path('cierre/', venta.CerrarCajaView.as_view(), name="cierre"),
-    # path('confirmar-venta/', venta.ConfirmarVentaView.as_view(), name='confirmarVenta'),
     path('panelVenta/', venta.PanelVenta.as_view(), name="panelVenta"),
     path('listaVenta/', venta.ListaVentaView.as_view(), name="listaVenta"),
 
     #Prueba
-    path('confirmar/', venta.ConfirmarVentaView.as_view(), name='confirmar_venta'),
     path('escanear/', venta.EscanearProductoView.as_view(), name='escanear_producto'),  
-]
+]  
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

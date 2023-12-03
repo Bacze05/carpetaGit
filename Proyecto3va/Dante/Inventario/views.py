@@ -1,17 +1,17 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.serializers import serialize
 from django.views.generic import TemplateView,ListView,UpdateView, CreateView,DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from .mixins import *
 from django.urls import reverse_lazy
 from Inventario.forms import *
 from Inventario.models import *
+from .mixins import *
 
 
-# Create your views here.
 #VISTAS GENERALES PAGINAS PRINCIPALES
+
 class Home(TemplateView):
     template_name='base.html'
 
