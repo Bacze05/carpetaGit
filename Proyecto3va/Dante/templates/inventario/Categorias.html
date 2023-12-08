@@ -12,7 +12,9 @@
             </div>
             {%if perms.Inventario.add_category%}
             <div class="col-md-4 mt-2 d-flex justify-content-end">
-                <a href="{% url 'crearCategorias' %}" class="btn btn-3d  btn-primary"><i class="fas fa-plus"></i> Crear Categoria</a>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Creacion">
+                    Crear Categorias
+                  </button>
             </div>
             {%endif%}
         </div>
@@ -26,13 +28,13 @@
                     <div class="card-body text-center">
                         <h5 class="card-title">{{ c.name }}</h5>
                         <p class="card-text">{{ c.descripcion }}</p>
-                        <a href="{% url 'inicioProductos' c.name %}" class="btn btn-3d btn-primary"><i class="fa-solid fa-eye"></i> Ver Listado</a>
+                        <a href="{% url 'listaProductos' c.name %}" class="btn btn-3d btn-primary"><i class="fa-solid fa-eye"></i> Ver Listado</a>
                         
                         <div class="form-group mt-2 row">
                             {% if perms.Inventario.change_category %}
                                 <a href="{% url 'editarCategoria' c.id %}" class="btn btn-3d btn-warning mr-2 col-7">Modificar</a>
                             {% endif %}
-                           
+                            
                             {% if perms.Inventario.delete_category %}
                                 <a href="{% url 'eliminarCategoria' c.id %}" class="btn btn-3d btn-danger mr-2 col-4"><i class="fa-regular fa-trash-can"></i> </a>
                             {% endif %}
@@ -42,27 +44,28 @@
             {% endfor %}
         </div>
         
+         <!-- Modal Creacion-->
+  <div class="modal fade" id="Creacion" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">                    <strong>Formulario de Registro</strong>
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="POST"  autocomplete="off">
+                {% csrf_token %}
+                      {{ form.as_p}}
+                      <div class="modal-footer">
+                        <a href="{% url 'categorias' %}" class="btn btn-3d btn-dark">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+              </form>
+        </div>
         
-        
-        <!-- <script>
-            function eliminarCategoria(id){
-                console.log(id)
-                
-                Swal.fire({
-                title: "Esta seguro que desea eliminarlo?",
-                text: "El cambio es irreversible",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Estoy seguro"
-                }).then(function(result) {
-                if (result.isConfirmed) {
-                    window.location.href = "/categorias/eliminado/"+id+"/"
-               
-                }
-                });
-            };
-            
-        </script> -->
+      </div>
+    </div>
+  </div>
+
 {% endblock content %}

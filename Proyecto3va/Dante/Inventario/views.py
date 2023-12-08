@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.serializers import serialize
-from django.views.generic import TemplateView,ListView,UpdateView, CreateView,DeleteView
+from django.views.generic import TemplateView,ListView,UpdateView, CreateView,DeleteView, View
 from django.urls import reverse_lazy
 from Inventario.forms import *
 from Inventario.models import *
@@ -15,98 +15,103 @@ from .mixins import *
 class Home(TemplateView):
     template_name='base.html'
 
-class Categorias(LoginRequiredMixin,ListView):
+class Categorias(LoginRequiredMixin,View):
     model=Category
+    form_class= CategoryForm
     template_name='inventario/Categorias.html'
-    context_object_name='categorias'
-
-
-class ListaProveedores(LoginRequiredMixin,ListView):
-    model=Suppliers
-    template_name='inventario/proveedores.html'
-    context_object_name='proveedores'
-
-class InicioListadoProducto(LoginRequiredMixin,TemplateView): 
-    template_name = 'inventario/listaProductos.html'
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = ProductForm()  # Esto carga el formulario en el contexto
-        return context
-class ListaProductosView(LoginRequiredMixin,ListView):
-    
-    context_object_name = 'productos'  # Nombre de la variable de contexto que contendrá la lista de productos
-
     def get_queryset(self):
-        # Obtener el parámetro de la URL (nombre de la categoría)
-        nombre_categoria = self.kwargs['nombre']
-        
-        # Obtener la categoría correspondiente
-        categoria = Category.objects.get(name=nombre_categoria)
-
-        # Filtrar productos por la categoría
-        return Product.objects.filter(name_category=categoria)
-
+        return self.model.objects.all()
+    
     def get_context_data(self, **kwargs):
-        # Agregar la categoría al contexto
-        context = super().get_context_data(**kwargs)
-        nombre_categoria = self.kwargs['nombre']
-        context['categorias'] = Category.objects.get(name=nombre_categoria)
+        context = {}
+        context["categorias"] = self.get_queryset()
+        context["form"] = self.form_class 
         return context
     
-    def get(self, request, **args):
+    def get(self,request,*args, **kwargs):  
+        return render(request,self.template_name,self.get_context_data())
+    
+    def post(self,request,*args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('categorias')
+     
+
+class ListaProveedores(LoginRequiredMixin,View):
+    model=Suppliers
+    form_class= SuppliersForm
+    template_name='inventario/proveedores.html'
+    def get_queryset(self):
+        return self.model.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = {}
+        context["proveedores"] = self.get_queryset()
+        context["form"] = self.form_class
+        return context
+    
+    
+    def get(self, request, *args, **kwargs):
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             data = serialize('json', self.get_queryset())
             return HttpResponse(data, 'application/json')
         else:
-            # Obtén el nombre de la categoría
-            nombre_categoria = self.kwargs['nombre']
-
-            # Redirige a 'inicioProductos' con el nombre de la categoría
-            return redirect('inicioProductos', nombre=nombre_categoria)
-
-
-
-#METODOS CREATES
-class CategoriaCrear(LoginRequiredMixin,CreateView):
-    model=Category
-    template_name='inventario/categoriasAdd.html'
-    form_class=CategoryForm
-    success_url=reverse_lazy('categorias')
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, "Creado Correctamente")
-        return response
-
-class ProductoCrear(LoginRequiredMixin,CreateView):
-    model = Product
-    template_name = 'inventario/productosAdd.html'
-    form_class = ProductForm
-    success_url = reverse_lazy('listaProductos', kwargs={'nombre': ''})  # Ajusta la URL según tu configuración de URL
+            return render(request,self.template_name,self.get_context_data())   
     
-    def form_valid(self, form):
-        # Accede al valor del campo name_category directamente desde el formulario
-        name_category_value = form.cleaned_data.get('name_category')
+    def post(self,request,*args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('proveedores')
+    
+class ListaProductosView(LoginRequiredMixin, ListView, View):
+    model=Product
+    form_class= ProductForm
+    template_name = 'inventario/listaProductos.html'
+    def get_context_data(self, **kwargs):
+        context = {}
+        nombre_categoria = kwargs.get('nombre')
         
-        messages.success(self.request, "Producto Creado Correctamente")
-        self.success_url = reverse_lazy('listaProductos', kwargs={'nombre': name_category_value})
-        
-        return super().form_valid(form)
+        try:
+            context['categorias'] = Category.objects.get(name=nombre_categoria)
+        except Category.DoesNotExist:
+            # Manejar la categoría que no existe, por ejemplo, redirigir a una página de error
+            print(f"Categoría '{nombre_categoria}' no encontrada.")
+            context['categorias'] = None  # Puedes establecerlo en None o cualquier otro valor por defecto
 
-    def form_invalid(self, form):
-        messages.error(self.request, "Error al modificar el producto")  # Mensaje de error en caso de formulario no válido
-        return super().form_invalid(form)
+        context["form"] = self.form_class
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            data = serialize('json', self.get_queryset())
+            return HttpResponse(data, 'application/json')
+        else:
+            nombre_categoria = kwargs.get('nombre')
+            context = self.get_context_data(nombre_categoria=nombre_categoria)
+            return render(request, self.template_name, context)
+    def get_queryset(self):
+        try:
+            nombre_categoria = self.kwargs.get('nombre')
+            categoria = Category.objects.get(name=nombre_categoria)
+            return Product.objects.filter(name_category=categoria)
+        except Category.DoesNotExist as e:
+            # Manejar la categoría que no existe e imprimir detalles
+            print(f"Error: {e}")
+            return Product.objects.none()
+
+    def post(self, request, *args, **kwargs):
+        # Manejar la creación de productos aquí
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+
+        nombre_categoria = kwargs.get('nombre')
+        return redirect('listaProductos', nombre=nombre_categoria)
 
 
-class ProveedorCrear(LoginRequiredMixin,CreateView):
-    model=Suppliers
-    template_name='inventario/proveedorAdd.html'
-    form_class=SuppliersForm
-    success_url=reverse_lazy('proveedores')
 
-    def form_valid(self, form):
-        messages.success(self.request, "Proveedor Creado Correctamente")
-        return super().form_valid(form)
     
 
 #METODOS EDITAR
@@ -143,18 +148,16 @@ class ProductoEdicion(LoginRequiredMixin,UpdateView):
 
 class ProveedorEdicion(LoginRequiredMixin,UpdateView):
     model=Suppliers
-    template_name='inventario/mantenedorProveedor.html'
     form_class=SuppliersForm
+    template_name='inventario/mantenedorProveedor.html'
     success_url= reverse_lazy('proveedores')
 
-    def form_valid(self, form):
-        messages.success(self.request, "Proveedor Modificado Correctamente")
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        messages.error(self.request, "Error al modificar al Proveedor")  # Mensaje de error en caso de formulario no válido
-        return super().form_invalid(form)
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["proveedores"] = Suppliers.objects.all()
+        return context
+    
+   
 
 
 #METODOS ELIMINAR
@@ -167,8 +170,6 @@ class ProductoEliminar(LoginRequiredMixin,DeleteView):
         messages.success(self.request, "Eliminado Correctamente")
         self.success_url = reverse_lazy('listaProductos', kwargs={'nombre': self.object.name_category.name})
         return super().form_valid(form)
-
-
 
 class CategoriaEliminar(LoginRequiredMixin,DeleteView):
     model=Category

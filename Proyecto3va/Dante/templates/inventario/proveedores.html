@@ -1,28 +1,26 @@
 {% extends "base.html" %}
-{% load static %}
-{% block css %}  
-{% endblock css %}
-
-{% block content %}
+{% load static %} 
+{% block css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
+{% endblock css %} {% block content %}
 <div class="container mt-5">
-
     <div class="container text-center mt-5">
-
         <div class="row">
             <div class="form-group col-md-8 mt-2 d-flex justify-content-center align-items-center">
-                <h1 class="fst-italic ">Proveedores</h1>
-
+                <h1 class="fst-italic">Proveedores</h1>
             </div>
             {% if perms.Inventario.add_suppliers %}
             <div class="col-md-4 mt-2 d-flex justify-content-end">
-                <a href="{% url 'crearProveedor' %}" class="btn btn-3d  btn-success"><i class="fas fa-plus"></i> Crear Proveedor</a>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Creacion">
+                    Crear Proveedor
+                </button>
             </div>
             {%endif%}
         </div>
         <div class="table-responsive mt-4">
-            <table class="table table-bordered table-hover table-striped">
-                <thead class="thead-red ">
-                    <tr >
+            <table id="tabla_proveedores" class="table table-bordered table-hover table-striped">
+                <thead class="thead-red">
+                    <tr>
                         <th>Run</th>
                         <th>Nombre</th>
                         <th>Email</th>
@@ -32,56 +30,41 @@
                         {%endif%}
                     </tr>
                 </thead>
-                <tbody>
-                    {% for c in proveedores %}
-                    <tr>
-                        <td>{{ c.run }}</td>
-                        <td>{{ c.name }}</td>
-                        <td>{{ c.email }}</td>
-                        <td>{{ c.cellphone }}</td>
-                        {% if perms.Inventario.change_suppliers or perms.Inventario.delete_suppliers %}
-                        <td>
-                            <div class="form-group" >
-                                {% if perms.Inventario.change_suppliers %}
-                                <a href="{%url 'editarProveedor' c.id %}" class="btn btn-3d btn-warning">
-                                    Modificar <i class="fa-regular fa-pen-to-square"></i>
-                                </a>
-                                {%endif%}
-                                {% if perms.Inventario.delete_suppliers %}
-                                <button type="button" class="btn btn-3d btn-danger" onclick="eliminarProveedor({{c.id}})">
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </button>
-                                {%endif%}
-                            </div>
-                        </td>
-                        {%endif%}
-                    </tr>
-                    {% endfor %}
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
-
+    <!-- Modal Creacion-->
+    <div class="modal fade" id="Creacion" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static"
+        data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        <strong>Formulario de Registro</strong>
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" autocomplete="off">
+                        {% csrf_token %} {{ form.as_p}}
+                        <div class="modal-footer">
+                            <a href="{% url 'proveedores' %}" class="btn btn-3d btn-dark">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<script>
-    function eliminarProveedor(id){
-        console.log(id)
-        
-        Swal.fire({
-        title: "Esta seguro que desea eliminarlo?",
-        text: "El cambio es irreversible",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Estoy seguro"
-        }).then(function(result) {
-        if (result.isConfirmed) {
-            window.location.href = "/proveedor/eliminado/"+id+"/"
-       
-        }
-        });
-    };
-    
-</script>
-{% endblock content%}
+
+
+
+{% endblock content%} 
+{% block extrajs %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="//cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="{% static 'js/productos/proveedores.js' %}"></script>
+
+{% endblock extrajs %}

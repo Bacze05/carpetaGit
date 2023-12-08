@@ -25,7 +25,6 @@ urlpatterns = [
     #LOGIN
     path('accounts/', include('django.contrib.auth.urls')),
     path('register/', venta.Register.as_view(), name="register"),
-    path('inicio_productos/<str:nombre>/', inventario.InicioListadoProducto.as_view(), name="inicioProductos"),
     #INVENTARIO
     #VISTAS GENERALES
     path('admin/', admin.site.urls),
@@ -33,10 +32,6 @@ urlpatterns = [
     path('categorias/', inventario.Categorias.as_view(), name="categorias"),
     path('proveedores/',inventario.ListaProveedores.as_view(), name='proveedores'),
     path('categorias/list/<str:nombre>/', inventario.ListaProductosView.as_view(), name="listaProductos"),
-    #Creacion
-    path('categorias/add/', inventario.CategoriaCrear.as_view(), name="crearCategorias"),
-    path('productos/Add/',inventario.ProductoCrear.as_view(),name='crearProducto'),
-    path('proveedor/Add/',inventario.ProveedorCrear.as_view(),name='crearProveedor'),
     #Modificar
     path('productos/edit/<int:pk>',inventario.ProductoEdicion.as_view(),name='editarProducto'),
     path('categorias/edit/<int:pk>',inventario.CategoriaEdicion.as_view(),name='editarCategoria'),
@@ -47,15 +42,12 @@ urlpatterns = [
     path('proveedor/eliminado/<int:pk>/',inventario.ProveedorEliminar.as_view(),name='elimminarProveedor'),
 
     #VENTA
-    
-    
     path('apertura/', venta.AbrirCajaView.as_view(), name="apertura"),
     path('cierre/', venta.CerrarCajaView.as_view(), name="cierre"),
     path('panelVenta/', venta.PanelVenta.as_view(), name="panelVenta"),
     path('listaVenta/', venta.ListaVentaView.as_view(), name="listaVenta"),
 
     #Prueba
-    path('escanear/', venta.EscanearProductoView.as_view(), name='escanear_producto'),  
 ]  
 
 if settings.DEBUG:
