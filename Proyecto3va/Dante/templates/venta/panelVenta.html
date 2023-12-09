@@ -93,14 +93,21 @@
                     </select>
                 </div>
             </div>
-            <div class="text-center mt-3">
-                <form method="POST" action="">
+            <div  id="ventaForm" class="text-center mt-3">
+                <!-- Formulario de venta -->
+                <form id="formularioVenta" method="POST">
                     {% csrf_token %}
-                    <div class="text-center mt-3">
-                        <button type="submit" id="ConfirmarVenta " class="btn btn-primary" name="confirmar">Confirmar</button>
-                        <a href="{% url 'home' %}" class="btn btn-danger">Cancelar</a>
-                    </div>
+                    <input type="hidden" name="venta" value="1"/>
+                    <input type="hidden" id="producto_id" name="producto" />
+                    <input type="hidden" id="bar_code" name="bar_code" />
+                    <input type="hidden" id="cantidad" name="cantidad" />
+                    <input type="hidden" id="price_sold" name="precio" />
+
+                    <!-- Otros campos del formulario aquí -->
+                    <button type="submit">Venta</button>
                 </form>
+
+                
             </div>
 
         </div>

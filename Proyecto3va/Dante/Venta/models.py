@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser,User
+from django.contrib.auth.models import  AbstractUser,User, BaseUserManager
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.utils import timezone
@@ -68,10 +68,47 @@ class Reporte(models.Model):
         return self.nombre
 
 
-   
+class UserManager(BaseUserManager):
+    def _create_user(self, username, rut, nombres,password,is_staff,is_superuser,**extra_firlds): 
+        user= self.model(
+            usernamae=username,
+            rut=rut,
+            nombres=nombres,
+            is_staff=is_staff,
+            is_superuser=is_superuser,
+            **extra_firlds
+
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+    
+    def create_user(self,username,rut,nombres,password=None,**extra_fields):
+        return self._create_user(username,rut,nombres,password,False,False,**extra_fields)
+    
+    def create_superuser(self,username,rut,nombres,password=None,**extra_fields):
+        return self._create_user(username,rut,nombres,password,True,True,**extra_fields)
+     
+
+
 class User(AbstractUser):
+    username= models.CharField('Nombre de Usuario', unique=True, max_length=100)
+    nombres= models.CharField('Nombres', max_length=200, blank=True, null=True)
+    apellidos= models.CharField('Apellidos', max_length=200, blank=True, null=True)
+    is_active= models.BooleanField(default=True)
+    is_staff=models.BooleanField(default=False)
     fecha_nacimiento = models.DateField(null=True, blank=True)
     rut = models.CharField(max_length=12, unique=True, null=True, blank=True)
+    objects = UserManager()
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['rut', 'nombres','apellidos' ]
+
+    def __str__(self) :
+        return f'{self.nombres}, {self.apellidos}'
+    
+    
+    
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,related_name='profile')

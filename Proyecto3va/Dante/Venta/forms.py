@@ -5,6 +5,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Div, Submit, Reset,Button
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from .models import *
 
 class CustomUserCreationForm(UserCreationForm):
     fecha_nacimiento = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y', attrs={'placeholder': 'dd/mm/aaaa'}))
@@ -74,8 +75,21 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['fecha_nacimiento'].label = 'Fecha de nacimiento'
 
 
-from django import forms
+class DetalleVentaForm(forms.ModelForm):
+    class Meta:
+        model = DetalleVenta
+        fields = ['venta', 'producto', 'cantidad', 'precio', 'descuento']
 
-class CantidadForm(forms.Form):
-    cantidad = forms.IntegerField(min_value=1)
-    producto_id = forms.IntegerField(widget=forms.HiddenInput())
+    def clean(self):
+        cleaned_data = super().clean()
+        cantidad = cleaned_data.get('cantidad')
+        precio = cleaned_data.get('precio')
+
+        # Realiza validaciones adicionales según tu lógica de negocio
+        if cantidad and cantidad <= 0:
+            raise forms.ValidationError("La cantidad debe ser mayor que cero.")
+
+        if precio and precio <= 0:
+            raise forms.ValidationError("El precio debe ser mayor que cero.")
+
+        return cleaned_data

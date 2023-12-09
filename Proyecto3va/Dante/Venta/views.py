@@ -9,70 +9,67 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView, FormView, View
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, DetalleVentaForm
 from Inventario.models import Product
 from .models import *
 
 
+
+
+from django.views.decorators.http import require_POST
+
+# class PanelVenta(View):
+#     template_name = 'venta/panelVenta.html'
+
+#     def get(self, request):
+#         return render(request, self.template_name)
+#     @staticmethod
+#     def post(request):
+#         if request.method == 'POST':
+#             formulario = DetalleVentaForm(request.POST)
+#             if formulario.is_valid():
+#                 detalle_venta = formulario.save()
+#                 detalle_venta.save()
+#                 return JsonResponse({'mensaje': 'Detalle de venta creado con éxito'})
+#             else:
+#                 errores = formulario.errors
+#                 return JsonResponse({'errores': errores}, status=400)
+#         else:
+#             # La solicitud no es POST, puedes manejarla según tus necesidades
+#             return HttpResponse('Esta vista solo acepta solicitudes POST.', status=405)
 from django.views import View
-from django.http import JsonResponse
-from django.core.exceptions import ObjectDoesNotExist
-from .models import DetalleVenta
-
-
-
-
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render
+from .forms import DetalleVentaForm
 
 class PanelVenta(View):
     template_name = 'venta/panelVenta.html'
 
     def get(self, request):
         return render(request, self.template_name)
-    
+
     def post(self, request):
         if request.method == 'POST':
-            codigo_barras = request.POST.get('codigo_barras')
-            producto = get_object_or_404(Product, bar_code=codigo_barras)
+            formulario = DetalleVentaForm(request.POST)
+            if formulario.is_valid():
+                detalle_venta = formulario.save(commit=False)
+                
+                # Restar 1 al stock del producto
+                detalle_venta.producto.stock -= 1
+                detalle_venta.producto.save()
 
-            # Recupera la venta actual del usuario desde la sesión
-            venta_actual_id = request.session.get('venta_actual')
-
-            # Si no hay venta actual, crea una nueva
-            if not venta_actual_id:
-                venta_actual = Venta.objects.create()
-                request.session['venta_actual'] = venta_actual.id
-            else:
-                venta_actual = Venta.objects.get(pk=venta_actual_id)
-
-            detalle_venta = DetalleVenta(
-                producto=producto,
-                cantidad=1,
-                precio=producto.price_sold,
-                venta=venta_actual
-            )
-
-            if producto.stock > 0:
                 detalle_venta.save()
-                venta_actual.detalles.add(detalle_venta)
-                venta_actual.save()
-                producto.stock -= 1
-                producto.save()
-
-                # Convierte los detalles a un formato serializable
-                detalles_serializable = list(venta_actual.detalles.values())
-
-                return JsonResponse({
-                    'status': 'OK',
-                    'message': 'Producto escaneado correctamente.',
-                    'producto_nombre': producto.name,
-                    'subtotal': detalle_venta.calcular_subtotal(),
-                    'detalles': detalles_serializable
-                })
-
+                return JsonResponse({'mensaje': 'Detalle de venta creado con éxito'})
             else:
-                return JsonResponse({'status': 'Error', 'message': 'Producto sin stock'}, status=400)
+                errores = formulario.errors
+                return JsonResponse({'errores': errores}, status=400)
+        else:
+            # La solicitud no es POST, puedes manejarla según tus necesidades
+            return HttpResponse('Esta vista solo acepta solicitudes POST.', status=405)
 
-        return JsonResponse({'status': 'Error', 'message': 'Método no permitido'}, status=400)
+        
+
+
 
 
 
@@ -102,6 +99,21 @@ class ListaVentaView(LoginRequiredMixin, ListView):
             producto['id'] = context['productos'][i].id
 
         return JsonResponse(productos_data, safe=False)
+    
+    # def post(request):
+    #     if request.method == 'POST':
+    #         formulario = DetalleVentaForm(request.POST)
+    #         if formulario.is_valid():
+    #             detalle_venta = formulario.save()
+    #             detalle_venta.save()
+    #             return JsonResponse({'mensaje': 'Detalle de venta creado con éxito'})
+    #         else:
+    #             errores = formulario.errors
+    #             return JsonResponse({'errores': errores}, status=400)
+    #     else:
+    #         # La solicitud no es POST, puedes manejarla según tus necesidades
+    #         return HttpResponse('Esta vista solo acepta solicitudes POST.', status=405)
+
 
     
 
