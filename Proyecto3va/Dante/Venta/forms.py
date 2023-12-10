@@ -2,18 +2,52 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Div, Submit, Reset,Button
+from crispy_forms.layout import Layout, Row, Div, Submit, Button
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from .models import *
 
+
 class CustomUserCreationForm(UserCreationForm):
     fecha_nacimiento = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y', attrs={'placeholder': 'dd/mm/aaaa'}))
-    email = forms.EmailField(label='Email')
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs['autofocus'] = True
+        self.fields['username'].help_text = ''
+        self.fields['password1'].help_text = ''  # Elimina las instrucciones de 'password1'
+        self.fields['password2'].help_text = ''
+        self.fields['fecha_nacimiento'].label = 'Fecha de nacimiento'  
+        self.fields.pop('password')
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Div('username', css_class='col-md-12'),
+            ),
+            Row(
+                Div('first_name', css_class='col-md-6'),
+                Div('last_name', css_class='col-md-6'),
+            ),
+            Row(
+                Div('rut', css_class='col-md-6'),
+                Div('email', css_class='col-md-6'),
+            ),
+            Row(
+                Div('password1', css_class='col-md-6'),
+                Div('password2', css_class='col-md-6'),
+            ),
+            Row(
+                Div('fecha_nacimiento', css_class='col-md-12'),
+            ),
+            Row(
+                Div('groups', css_class='col-md-12'),  # Agregamos el campo 'groups'
+            ),
+            Row(
+                Div(Submit('enviar', 'Enviar', css_class='btn btn-primary'), css_class='col-md-6'),
+                Div(Button('cancelar', 'Cancelar', css_class='btn btn-secondary', onclick='window.location.href="/"; return false;'), css_class='col-md-6'),
+            )
+        )
 
-    class Meta:
-        model = get_user_model()
-        fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'rut', 'email', 'fecha_nacimiento')
+        self.fields['fecha_nacimiento'].label = 'Fecha de nacimiento'
 
     def clean(self):
         cleaned_data = super().clean()
@@ -42,37 +76,11 @@ class CustomUserCreationForm(UserCreationForm):
 
         return cleaned_data
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['username'].help_text = ''
-        self.fields['password1'].help_text = ''  # Elimina las instrucciones de 'password1'
-        self.fields['password2'].help_text = ''
-        self.helper = FormHelper()
-        self.helper.layout = Layout(
-            Row(
-                Div('first_name', css_class='col-md-6'),
-                Div('last_name', css_class='col-md-6'),
-            ),
-            Row(
-                Div('rut', css_class='col-md-6'),
-                Div('email', css_class='col-md-6'),
-            ),
-            Row(
-                Div('username', css_class='col-md-12'),
-            ),
-            Row(
-                Div('password1', css_class='col-md-6'),
-                Div('password2', css_class='col-md-6'),
-            ),
-            Row(
-                Div('fecha_nacimiento', css_class='col-md-12'),
-            ),
-            Row(
-                Div(Submit('enviar', 'Enviar'), css_class='col-md-6'),
-                Div(Button('cancelar', 'Cancelar', css_class='btn btn-secondary', onclick='window.location.href="/"; return false;'), css_class='col-md-6'),
-            )
-        )
-        self.fields['fecha_nacimiento'].label = 'Fecha de nacimiento'
+    class Meta:
+        model = User
+        fields = '__all__'
+        exclude = ['user_permissions', 'last_login', 'date_joined','is_active','is_superuser','is_staff']
+
 
 
 class DetalleVentaForm(forms.ModelForm):

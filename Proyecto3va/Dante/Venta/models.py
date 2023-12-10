@@ -69,32 +69,32 @@ class Reporte(models.Model):
 
 
 class UserManager(BaseUserManager):
-    def _create_user(self, username, rut, nombres,password,is_staff,is_superuser,**extra_firlds): 
+    def _create_user(self, username, rut, first_name,password,is_staff,is_superuser,**extra_fields): 
         user= self.model(
-            usernamae=username,
+            username=username,
             rut=rut,
-            nombres=nombres,
+            first_name=first_name,
             is_staff=is_staff,
             is_superuser=is_superuser,
-            **extra_firlds
+            **extra_fields
 
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
     
-    def create_user(self,username,rut,nombres,password=None,**extra_fields):
-        return self._create_user(username,rut,nombres,password,False,False,**extra_fields)
+    def create_user(self,username,rut,first_name,password=None,**extra_fields):
+        return self._create_user(username,rut,first_name,password,False,False,**extra_fields)
     
-    def create_superuser(self,username,rut,nombres,password=None,**extra_fields):
-        return self._create_user(username,rut,nombres,password,True,True,**extra_fields)
+    def create_superuser(self,username,rut,first_name,password=None,**extra_fields):
+        return self._create_user(username,rut,first_name,password,True,True,**extra_fields)
      
 
 
 class User(AbstractUser):
     username= models.CharField('Nombre de Usuario', unique=True, max_length=100)
-    nombres= models.CharField('Nombres', max_length=200, blank=True, null=True)
-    apellidos= models.CharField('Apellidos', max_length=200, blank=True, null=True)
+    first_name= models.CharField('Nombres', max_length=200, blank=True, null=True)
+    last_name= models.CharField('Apellidos', max_length=200, blank=True, null=True)
     is_active= models.BooleanField(default=True)
     is_staff=models.BooleanField(default=False)
     fecha_nacimiento = models.DateField(null=True, blank=True)
@@ -105,7 +105,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['rut', 'nombres','apellidos' ]
 
     def __str__(self) :
-        return f'{self.nombres}, {self.apellidos}'
+        return f'{self.first_name}, {self.last_name}'
     
     
     
