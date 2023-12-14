@@ -1,0 +1,44 @@
+/* Estilos específicos para el cuerpo del modal */
+.mi-modal-body {
+    background: #B0E0E6 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  
+  .mi-modal-body h1 {
+    color: black;
+  }
+  
+  .mi-modal-body .effect-3d {
+    transform: perspective(1000px) rotateY(10deg);
+    transition: transform 0.3s;
+  }
+  
+  .mi-modal-body .effect-3d:hover {
+    transform: perspective(1000px) rotateY(0deg);
+  }
+  
+  .mi-modal-body form {
+    background-color: #3498DB; /* Azul Medio */
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 50px;
+    width: 500px;
+    text-align: left;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .mi-modal-body .form-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 40px;
+  }
+  
+  /* ... Otros estilos ... */
+  

@@ -54,15 +54,17 @@
                   <a class="nav-link " href="{% url 'proveedores' %}">Proveedor</a>
                 </li>
                 {%endif%}
+                {% if perms.Venta.add_user %}
+
                 <li>
                   <hr class="dropdown-divider">
                 </li>
-
-                {% if perms.Inventario.add_user %}
                 <li class="nav-item">
-                  <a href="{% url 'register' %}" class="nav-link ">Crear usuario</a>
+                  <a href="{% url 'usuarios' %}" class="nav-link ">Usuario</a>
                 </li>
                 {% endif %}
+
+                
               </ul>
             </li>
 

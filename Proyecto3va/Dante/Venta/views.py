@@ -100,19 +100,7 @@ class ListaVentaView(LoginRequiredMixin, ListView):
 
         return JsonResponse(productos_data, safe=False)
     
-    # def post(request):
-    #     if request.method == 'POST':
-    #         formulario = DetalleVentaForm(request.POST)
-    #         if formulario.is_valid():
-    #             detalle_venta = formulario.save()
-    #             detalle_venta.save()
-    #             return JsonResponse({'mensaje': 'Detalle de venta creado con éxito'})
-    #         else:
-    #             errores = formulario.errors
-    #             return JsonResponse({'errores': errores}, status=400)
-    #     else:
-    #         # La solicitud no es POST, puedes manejarla según tus necesidades
-    #         return HttpResponse('Esta vista solo acepta solicitudes POST.', status=405)
+   
 
 
     
@@ -120,21 +108,7 @@ class ListaVentaView(LoginRequiredMixin, ListView):
         
 
 
-class Register(LoginRequiredMixin, FormView):
-    template_name = 'registration/register.html'
-    form_class = CustomUserCreationForm
 
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        return redirect('home')
-
-    def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
 
 
 class AbrirCajaView(LoginRequiredMixin, View):

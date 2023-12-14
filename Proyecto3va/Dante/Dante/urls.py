@@ -20,11 +20,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from Inventario import views as inventario 
 from Venta import views as venta
+from inventarioApi import views as Api
 
 urlpatterns = [
     #LOGIN
     path('accounts/', include('django.contrib.auth.urls')),
-    path('register/', venta.Register.as_view(), name="register"),
+    path('usuarios/desactivar/<int:pk>/', inventario.desactivar_usuario, name='desactivar_usuario'),
+    path('usuarios/activar/<int:pk>/', inventario.activar_usuario, name='activar_usuario'),
     #INVENTARIO
     #VISTAS GENERALES
     path('admin/', admin.site.urls),
@@ -36,6 +38,8 @@ urlpatterns = [
     path('productos/edit/<int:pk>',inventario.ProductoEdicion.as_view(),name='editarProducto'),
     path('categorias/edit/<int:pk>',inventario.CategoriaEdicion.as_view(),name='editarCategoria'),
     path('proveedor/edit/<int:pk>',inventario.ProveedorEdicion.as_view(),name='editarProveedor'),
+    path('usuarios/edit/<int:pk>',inventario.UsuarioEdicion.as_view(),name='editarUsuario'),
+
     #Eliminar
     path('productos/eliminado/<int:pk>/',inventario.ProductoEliminar.as_view(),name='eliminarProducto'),
     path('categorias/eliminado/<int:pk>/',inventario.CategoriaEliminar.as_view(),name='eliminarCategoria'),
@@ -46,8 +50,16 @@ urlpatterns = [
     path('cierre/', venta.CerrarCajaView.as_view(), name="cierre"),
     path('panelVenta/', venta.PanelVenta.as_view(), name="panelVenta"),
     path('listaVenta/', venta.ListaVentaView.as_view(), name="listaVenta"),
+    path('usuarios/', inventario.Usuarios.as_view(), name="usuarios"),
+    path('usuariosDelete/', inventario.UsuariosDeletes.as_view(), name="usuariosDelete"),
+    path('obtener_nombre_grupo/<int:group_id>/', inventario.obtener_nombre_grupo, name='obtener_nombre_grupo'),
+
 
     #Prueba
+    path('usuariosApi/', Api.UsuarioApi, name='usuarioApi'),
+    path('usuariosListApi/', Api.usuario_listado, name='usuariolistApi'),
+    path('productosListApi/', Api.productos_listado, name='productolistApi'),
+    path('usuariosListApi/<int:pk>/', Api.usuario_detalle, name='usuariodetalleApi'),
 ]  
 
 if settings.DEBUG:
