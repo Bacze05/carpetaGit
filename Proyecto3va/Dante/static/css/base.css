@@ -28,7 +28,25 @@
   transform: scale(1.05);
 }
 
+.footer{
+  background-color: #001F3F ;
+}
+/* Seleccionar todos los elementos p y establecer el color del texto a blanco */
+p {
+  color: white;
+}
 
+/* Seleccionar todos los elementos li y establecer el color del texto a blanco */
+li {
+  color: white;
+}
+
+/* Seleccionar todos los elementos h4 y establecer el color del texto a blanco */
+.h4 {
+  color: white;
+  
+  
+}
 
 
 

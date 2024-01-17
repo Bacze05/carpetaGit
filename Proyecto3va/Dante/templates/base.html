@@ -109,14 +109,14 @@
   <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="true">
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img src="/media/welcome.jpg" class="d-block w-100" alt="..." height="300px">
+        <img src="/media/welcome.jpg" class="d-block w-100" alt="..." height="400px">
       </div>
       <div class="carousel-item ">
-        <img src="/media/fonde2.jpg" class="d-block w-100" alt="..." height="300px">
+        <img src="/media/fonde2.jpg" class="d-block w-100" alt="..." height="400px">
       </div>
 
       <div class="carousel-item">
-        <img src="/media/fondo.svg" class="d-block w-100" alt="..." height="300px">
+        <img src="/media/fondo.svg" class="d-block w-100" alt="..." height="400px">
       </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
@@ -130,26 +130,53 @@
       <span class="visually-hidden">Next</span>
     </button>
   </div>
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-6">
+          <h4 class="h4">Contacto</h4>
+          <p><i class="fas fa-map-marker-alt"></i> Dirección: 123 Calle Ficticia, Colonia Imaginaria, Ciudad Irreal, Estado de los Sueños, Código Postal: 12345, País de la Imaginación.</p>
+          <p><i class="fas fa-phone"></i> Teléfono: +595 6995821</p>
+          <p><i class="fas fa-envelope"></i> Correo: Soporte@sistemaventainventario.com</p>
+        </div>
+        
+        <div class="col-lg-4">
+          <h4 class="h4">Síguenos</h4>
+          <ul class="list-unstyled">
+            <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+            <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+            <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <p class="text-center">© 2023 SystemInventory. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
   {% endblock content %}
+  
 
-  {% if messages %}
-  {% for m in messages %}
-  <script>
-
-    Swal.fire({
-      title: 'Mensaje',
-      text: "{{ message }}",
-      icon: 'success',
-      confirmButtonText: 'Ok'
-    });
-
-
-  </script>
-  {% endfor %}
-  {%endif%}
-  {%block extrajs%}
-
-  {%endblock extrajs%}
 </body>
+{% if messages %}
+{% for m in messages %}
+<script>
+
+  Swal.fire({
+    title: 'Mensaje',
+    text: "{{ message }}",
+    icon: 'success',
+    confirmButtonText: 'Ok'
+  });
+
+
+</script>
+{% endfor %}
+{%endif%}
+{%block extrajs%}
+
+{%endblock extrajs%}
 
 </html>
