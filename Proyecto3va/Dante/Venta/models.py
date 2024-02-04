@@ -102,7 +102,7 @@ class User(AbstractUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['rut', 'nombres','apellidos' ]
+    REQUIRED_FIELDS = ['rut', 'first_name', 'last_name']
 
     def __str__(self) :
         return f'{self.first_name}, {self.last_name}'
@@ -133,3 +133,5 @@ def save_user_profile(sender, instance, **kwargs):
 
 post_save.connect(create_user_profile,sender=User)
 post_save.connect(save_user_profile,sender=User)
+
+
